@@ -25,6 +25,7 @@ class BeachController {
         severityLevel: beach.analytics?.severityLevel || 'LOW',
       },
       isActive: beach.isActive,
+      image: beach.image,
       createdAt: beach.createdAt,
       updatedAt: beach.updatedAt,
     };

@@ -9,6 +9,12 @@ const beachSchema = new mongoose.Schema(
       index: true,
     },
 
+    image: {
+      type: String,
+      default: 'https://placehold.co/300X200?text=No+Image+Found',
+      trim: true,
+    },
+
     location: {
       address: {
         type: String,
