@@ -15,6 +15,7 @@ const beachValidation = {
         }),
       }).required(),
       description: Joi.string().max(500).trim(),
+      image: Joi.string().required(),
     }),
   },
 
