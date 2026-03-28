@@ -15,6 +15,9 @@ const eventValidation = {
       beachId: Joi.string().required().messages({
         'string.empty': 'Beach Id is required',
       }),
+        agentId: Joi.string().required().messages({
+        'string.empty': 'Agent Id is required',
+      }),
       startDate: Joi.date().iso().greater('now').required().messages({
         'date.base': 'Start date must be a valid date',
         'date.greater': 'Start date must be in the future',
