@@ -323,6 +323,45 @@ class EventService {
 
     return { message: 'Event deleted successfully' };
   }
+
+  /**
+   * Get events by Agent ID
+   * Returns all events assigned to a specific agent
+   */
+  async getEventsByAgentId(agentId, page = 1, limit = 10) {
+    validateObjectId(agentId, 'Agent ID');
+
+    const query = {
+      agentId,
+      isDeleted: false,
+    };
+
+    const skip = (page - 1) * limit;
+
+    const [events, total] = await Promise.all([
+      Event.find(query)
+        .populate('beachId', 'name')
+        .populate('organizerId', 'name email')
+        .populate('agentId', 'name email')
+        .populate('volunteers', 'name email')
+        .populate('chatGroupId')
+        .sort({ startDate: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Event.countDocuments(query),
+    ]);
+
+    return {
+      events,
+      pagination: {
+        total,
+        page,
+        pages: Math.ceil(total / limit),
+        limit,
+      },
+    };
+  }
 }
 
 module.exports = new EventService();

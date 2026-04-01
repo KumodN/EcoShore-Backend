@@ -157,6 +157,30 @@ class EventController {
       next(error);
     }
   }
+
+  /**
+   * Get events by Agent ID
+   * GET /events/agent/:agentId
+   */
+  async getEventsByAgentId(req, res, next) {
+    try {
+      const { agentId } = req.params;
+      const { page = 1, limit = 10 } = req.query;
+
+      const result = await eventService.getEventsByAgentId(
+        agentId,
+        parseInt(page),
+        parseInt(limit)
+      );
+
+      res.status(200).json({
+        success: true,
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new EventController();

@@ -85,4 +85,16 @@ router.delete(
   eventController.deleteEvent
 );
 
+/**
+ * @route   GET /events/agent/:agentId
+ * @desc    Get all events assigned to a specific agent
+ * @access  Private (Admin and Agent)
+ */
+router.get(
+  '/agent/:agentId',
+  requireAuth,
+  authorizeRoles(ROLES.AGENT, ROLES.ADMIN),
+  eventController.getEventsByAgentId
+);
+
 module.exports = router;
