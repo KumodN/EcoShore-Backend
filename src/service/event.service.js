@@ -63,6 +63,7 @@ class EventService {
 
       return await Event.findById(event[0]._id)
         .populate('organizerId', 'name email')
+        .populate('agentId', 'name email')
         .populate('chatGroupId')
         .lean();
     } catch (error) {
@@ -101,6 +102,7 @@ class EventService {
       Event.find(query)
         .populate('beachId')
         .populate('organizerId', 'name email')
+        .populate('agentId', 'name email')
         .populate('chatGroupId')
         .sort({ startDate: 1 })
         .skip(skip)
@@ -131,6 +133,7 @@ class EventService {
       isDeleted: false,
     })
       .populate('organizerId', 'name email')
+      .populate('agentId', 'name email')
       .populate('volunteers', 'name email')
       .populate('chatGroupId')
       .lean();
@@ -176,7 +179,53 @@ class EventService {
 
     return await Event.findById(eventId)
       .populate('organizerId', 'name email')
+      .populate('agentId', 'name email')
       .populate('chatGroupId')
+      .lean();
+  }
+
+  /**
+   * Assign agent to event (Admin only)
+   */
+  async assignAgent(eventId, agentId) {
+    validateObjectId(eventId, 'Event ID');
+    validateObjectId(agentId, 'Agent ID');
+
+    const event = await Event.findOne({
+      _id: eventId,
+      isDeleted: false,
+    });
+
+    if (!event) {
+      throw new AppError('Event not found', 404);
+    }
+
+    // Verify agent exists and has agent role
+    const agent = await User.findOne({
+      _id: agentId,
+      role: ROLES.AGENT,
+    });
+
+    if (!agent) {
+      throw new AppError('Agent not found or is not an agent', 404);
+    }
+
+    // Check if agent is assigned to the same beach as the event
+    if (agent.assignedBeach.toString() !== event.beachId.toString()) {
+      throw new AppError(
+        'Agent is not assigned to this event beach',
+        400
+      );
+    }
+
+    // Update event with agent
+    event.agentId = agentId;
+    await event.save();
+
+    return await Event.findById(eventId)
+      .populate('organizerId', 'name email')
+      .populate('agentId', 'name email')
+      .populate('beachId', 'name')
       .lean();
   }
 
@@ -232,6 +281,9 @@ class EventService {
       await session.commitTransaction();
 
       return await Event.findById(eventId)
+        .populate('organizerId', 'name email')
+        .populate('agentId', 'name email')
+        .populate('beachId', 'name')
         .populate('volunteers', 'name email')
         .lean();
     } catch (error) {
