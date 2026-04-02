@@ -62,6 +62,17 @@ router.post(
 
 /**
  * @swagger
+ * /analytics/carbon/recalculate:
+ *   post:
+ *     summary: Bulk-recalculate carbon offsets for all waste records (admin)
+ *     tags: [Analytics]
+ *     responses:
+ *       200: { description: Carbon offsets recalculated successfully }
+ */
+router.post('/carbon/recalculate', analyticsController.recalculateCarbonOffsets);
+
+/**
+ * @swagger
  * /analytics/trend-prediction:
  *   get:
  *     summary: Predict pollution trends
