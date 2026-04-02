@@ -1,60 +1,72 @@
 const beachRepository = require('../repository/beach.repository');
 const wasteRecordRepository = require('../repository/wasteRecord.repository');
-const { CarbonConfig } = require('../models');
+const { CarbonConfig, WasteRecord, Beach } = require('../models');
+const Event = require('../models/Event');
 const { NotFoundError } = require('../utils/AppError');
 const {
   SEVERITY_WEIGHTS,
   TREND_PREDICTION,
+  PLASTIC_TYPES,
 } = require('../constants/analytics.constants');
 
 class AnalyticsService {
   /**
    * Get dashboard overview statistics
    */
-  async getDashboardOverview() {
-    // Get beach stats
-    const beachStats = await beachRepository.getDashboardStats();
+  async getDashboardOverview(startDate, endDate) {
+    const wsMatch = { isDeleted: { $ne: true } };
+    const eventMatch = { isDeleted: { $ne: true } };
 
-    // Get total carbon offset
-    // This aggregation could also be moved to repo if complex, doing inline for now or better yet, using repo method I added
-    // I added getCarbonOffsetSummary to repo, but here we just need total.
-    // Let's use the one in repo if it matches or create a new one.
-    // Actually I can just use wasteRecordRepository.aggregate if I exposed it, but I didn't.
-    // I exposed getCarbonOffsetSummary.
-    // Let's use getCarbonOffsetSummary for total carbon.
+    if (startDate || endDate) {
+      wsMatch.collectionDate = {};
+      eventMatch.startDate = {};
+      if (startDate) {
+        wsMatch.collectionDate.$gte = new Date(startDate);
+        eventMatch.startDate.$gte = new Date(startDate);
+      }
+      if (endDate) {
+        wsMatch.collectionDate.$lte = new Date(endDate);
+        eventMatch.startDate.$lte = new Date(endDate);
+      }
+    }
 
-    // Or I can add a specific method to repo for this simple aggregate.
-    // But wait, getCarbonOffsetSummary returns { totalCarbonOffset ... }
-    const carbonSummary = await wasteRecordRepository.getCarbonOffsetSummary({
-      isVerified: true,
-    });
-    // It returns an array of objects from aggregate.
-    const totalCarbonOffset = carbonSummary[0]?.totalCarbonOffset || 0;
+    // ── 1. Total plastic weight — direct from WasteRecord collection ─────────
+    const wasteSummary = await WasteRecord.aggregate([
+      { $match: wsMatch },
+      {
+        $group: {
+          _id: null,
+          totalWasteCollected: { $sum: '$weight' },
+          totalCarbonOffset: { $sum: '$carbonOffset' },
+        },
+      },
+    ]);
+    const totalWasteCollected = wasteSummary[0]?.totalWasteCollected || 0;
+    const totalCarbonOffset = wasteSummary[0]?.totalCarbonOffset || 0;
 
-    // Get most polluted beach
-    // Using simple repo find
-    const mostPolluted = await beachRepository.findOne({ isActive: true }); // findOne works from BaseRepo?
-    // BaseRepo.findOne(filter) returns model.findOne(filter).
-    // We need sort and select. BaseRepo.findOne doesn't support chaining easily as it awaits.
-    // So we need to access model or add method.
-    // Since BeachRepository extends BaseRepository and BaseRepository stores this.model
-    // We can access beachRepository.model if we really need to, but that defeats the purpose.
-    // Better to add `findMostPollutedBeach` to BeachRepository or similar.
-    // For now, I will assume I can't chain.
-    // I'll resort to `getSeverityRanking(1)` which I already added to BeachRepository!
+    // ── 2. Distinct beaches that have at least one waste record ───────────────
+    const distinctBeachIds = await WasteRecord.distinct('beachId', wsMatch);
+    const totalBeachesCleaned = distinctBeachIds.length;
 
+    // ── 3. Total events (all non-deleted) ─────────────────────────────────────
+    const totalEvents = await Event.countDocuments(eventMatch);
+
+    // ── 4. Most polluted beach (for informational section) ────────────────────
     const rankings = await beachRepository.getSeverityRanking(1);
     const mostPollutedBeach = rankings[0] || null;
 
-    // Get monthly trend data
+    // ── 5. Monthly trend data for sparklines ──────────────────────────────────
     const monthlyTrends = await wasteRecordRepository.getMonthlyTrends(null, 6);
+
+    // ── 6. Total active beaches ───────────────────────────────────────────────
+    const beachStats = await beachRepository.getDashboardStats();
 
     return {
       summary: {
-        totalBeaches: beachStats?.totalBeaches || 0,
-        totalWasteCollected: beachStats?.totalWasteAll || 0,
-        totalCleanups: beachStats?.totalCleanupsAll || 0,
-        totalCarbonOffset: totalCarbonOffset,
+        totalBeaches: totalBeachesCleaned,
+        totalWasteCollected,
+        totalCleanups: totalEvents,
+        totalCarbonOffset,
         averageSeverity: beachStats?.avgSeverity || 0,
       },
       mostPollutedBeach: mostPollutedBeach
@@ -93,7 +105,7 @@ class AnalyticsService {
           {
             beachId: beach._id,
             collectionDate: { $gte: ninetyDaysAgo },
-            isVerified: true,
+            isDeleted: { $ne: true },
           },
           { collectionDate: 1 },
           0,
@@ -168,10 +180,27 @@ class AnalyticsService {
   }
 
   /**
-   * Get beach severity ranking
+   * Get beach severity ranking with dynamically aggregated carbon offset
    */
   async getSeverityRanking(limit = 10) {
     const beaches = await beachRepository.getSeverityRanking(limit);
+
+    // Aggregating Carbon Offset for these exact beaches
+    const beachIds = beaches.map((b) => b._id);
+    const offsetData = await WasteRecord.aggregate([
+      { $match: { beachId: { $in: beachIds }, isDeleted: { $ne: true } } },
+      {
+        $group: {
+          _id: '$beachId',
+          totalCarbonOffset: { $sum: '$carbonOffset' },
+        },
+      },
+    ]);
+
+    const offsetMap = {};
+    offsetData.forEach((d) => {
+      offsetMap[d._id.toString()] = d.totalCarbonOffset;
+    });
 
     return beaches.map((beach) => ({
       id: beach._id,
@@ -180,6 +209,9 @@ class AnalyticsService {
       severityScore: beach.analytics?.severityScore,
       severityLevel: beach.analytics?.severityLevel,
       totalWaste: beach.analytics?.totalWasteCollected,
+      totalCarbonOffset: Number(
+        (offsetMap[beach._id.toString()] || 0).toFixed(2)
+      ),
     }));
   }
 
@@ -209,17 +241,37 @@ class AnalyticsService {
     const windowSize = 3;
     const forecast = [];
 
+    // Use average emission factor of 2.5 kg CO₂ per kg waste as default
+    const carbonConfig = await CarbonConfig.getActiveConfig();
+    const emissionFactor = carbonConfig?.emissionFactor || 2.5;
+
+    // Start from the beginning of next month
+    const forecastStart = new Date();
+    forecastStart.setDate(1);
+    forecastStart.setMonth(forecastStart.getMonth() + 1);
+
     for (let i = 0; i < months; i++) {
       const recentWeights = weights.slice(-windowSize);
       const average = recentWeights.reduce((a, b) => a + b, 0) / windowSize;
 
       // Add some random variation for realism (±10%)
       const variation = average * 0.1 * (Math.random() - 0.5);
-      const predictedWeight = average + variation;
+      const predictedWeight = Math.max(0, average + variation);
+      const predictedCarbonOffset = predictedWeight * emissionFactor;
+
+      // Build a human-readable month label e.g. "Apr 2026"
+      const forecastDate = new Date(forecastStart);
+      forecastDate.setMonth(forecastStart.getMonth() + i);
+      const dateLabel = forecastDate.toLocaleDateString('en-US', {
+        month: 'short',
+        year: 'numeric',
+      });
 
       forecast.push({
         month: i + 1,
+        date: dateLabel,
         predictedWeight: Number(predictedWeight.toFixed(2)),
+        predictedCarbonOffset: Number(predictedCarbonOffset.toFixed(2)),
         confidence: 0.8 - i * 0.1, // Decreasing confidence
       });
 
@@ -258,7 +310,8 @@ class AnalyticsService {
    * Calculate carbon offset summary
    */
   async getCarbonOffsetSummary(startDate, endDate) {
-    const matchStage = { isVerified: true };
+    // Include ALL non-deleted records (not just verified) for accurate totals
+    const matchStage = { isDeleted: { $ne: true } };
 
     if (startDate || endDate) {
       matchStage.collectionDate = {};
@@ -289,6 +342,63 @@ class AnalyticsService {
       },
       emissionFactor: carbonConfig?.emissionFactor || 2.5,
       equivalents: carbonEquivalent,
+    };
+  }
+
+  /**
+   * Bulk-recalculate carbonOffset for every WasteRecord in the DB.
+   * Also verifies all records and rebuilds Beach.analytics totals.
+   */
+  async recalculateCarbonOffsets() {
+    const carbonConfig = await CarbonConfig.getActiveConfig();
+    const emissionFactor = carbonConfig?.emissionFactor || 2.5;
+
+    // 1. Recalculate carbonOffset for every non-deleted waste record
+    const records = await WasteRecord.find({ isDeleted: { $ne: true } });
+    let updated = 0;
+
+    const bulkOps = records.map((record) => {
+      const multiplier = PLASTIC_TYPES[record.plasticType]?.weight || 1.0;
+      const carbonOffset = Number(
+        (record.weight * emissionFactor * multiplier).toFixed(4)
+      );
+      updated++;
+      return {
+        updateOne: {
+          filter: { _id: record._id },
+          update: { $set: { carbonOffset, isVerified: true } },
+        },
+      };
+    });
+
+    if (bulkOps.length > 0) {
+      await WasteRecord.bulkWrite(bulkOps);
+    }
+
+    // 2. Rebuild Beach.analytics totals from scratch
+    const beaches = await beachRepository.find({ isActive: true });
+    for (const beach of beaches) {
+      const beachRecords = await WasteRecord.find({
+        beachId: beach._id,
+        isDeleted: { $ne: true },
+      });
+
+      const totalWaste = beachRecords.reduce((s, r) => s + (r.weight || 0), 0);
+      beach.analytics.totalWasteCollected = totalWaste;
+      beach.analytics.totalCleanups = beachRecords.length;
+      if (beachRecords.length > 0) {
+        const latest = beachRecords.reduce((a, b) =>
+          a.collectionDate > b.collectionDate ? a : b
+        );
+        beach.analytics.lastCleanupDate = latest.collectionDate;
+      }
+      await beach.save();
+    }
+
+    return {
+      recordsUpdated: updated,
+      emissionFactorUsed: emissionFactor,
+      beachesRebuild: beaches.length,
     };
   }
 }
