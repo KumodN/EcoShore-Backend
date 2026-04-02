@@ -98,6 +98,27 @@ class EventController {
   }
 
   /**
+   * Assign agent to event
+   * PATCH /events/:id/assign-agent
+   */
+  async assignAgent(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { agentId } = req.body;
+
+      const event = await eventService.assignAgent(id, agentId);
+
+      res.status(200).json({
+        success: true,
+        message: 'Agent assigned to event successfully',
+        data: event,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Join event
    * POST /events/:id/join
    */

@@ -50,6 +50,19 @@ router.patch(
 );
 
 /**
+ * @route   PATCH /events/:id/assign-agent
+ * @desc    Assign agent to event (Admin only)
+ * @access  Private (Admin)
+ */
+router.patch(
+  '/:id/assign-agent',
+  requireAuth,
+  authorizeRoles(ROLES.ADMIN),
+  validate(eventValidation.assignAgent),
+  eventController.assignAgent
+);
+
+/**
  * @route   POST /events/:id/join
  * @desc    Join event as volunteer
  * @access  Private
