@@ -3,7 +3,7 @@ const express = require('express');
 const setupTestApp = (router, routePath = '/api') => {
   const app = express();
   app.use(express.json());
-  
+
   // Custom mock user for request
   app.use((req, res, next) => {
     req.user = {
