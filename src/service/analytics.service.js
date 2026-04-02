@@ -184,21 +184,21 @@ class AnalyticsService {
    */
   async getSeverityRanking(limit = 10) {
     const beaches = await beachRepository.getSeverityRanking(limit);
-    
+
     // Aggregating Carbon Offset for these exact beaches
-    const beachIds = beaches.map(b => b._id);
+    const beachIds = beaches.map((b) => b._id);
     const offsetData = await WasteRecord.aggregate([
       { $match: { beachId: { $in: beachIds }, isDeleted: { $ne: true } } },
       {
         $group: {
           _id: '$beachId',
-          totalCarbonOffset: { $sum: '$carbonOffset' }
-        }
-      }
+          totalCarbonOffset: { $sum: '$carbonOffset' },
+        },
+      },
     ]);
-    
+
     const offsetMap = {};
-    offsetData.forEach(d => {
+    offsetData.forEach((d) => {
       offsetMap[d._id.toString()] = d.totalCarbonOffset;
     });
 
@@ -209,7 +209,9 @@ class AnalyticsService {
       severityScore: beach.analytics?.severityScore,
       severityLevel: beach.analytics?.severityLevel,
       totalWaste: beach.analytics?.totalWasteCollected,
-      totalCarbonOffset: Number((offsetMap[beach._id.toString()] || 0).toFixed(2)),
+      totalCarbonOffset: Number(
+        (offsetMap[beach._id.toString()] || 0).toFixed(2)
+      ),
     }));
   }
 

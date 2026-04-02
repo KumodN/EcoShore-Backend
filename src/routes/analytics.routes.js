@@ -69,7 +69,10 @@ router.post(
  *     responses:
  *       200: { description: Carbon offsets recalculated successfully }
  */
-router.post('/carbon/recalculate', analyticsController.recalculateCarbonOffsets);
+router.post(
+  '/carbon/recalculate',
+  analyticsController.recalculateCarbonOffsets
+);
 
 /**
  * @swagger

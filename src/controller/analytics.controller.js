@@ -8,7 +8,10 @@ class AnalyticsController {
    */
   getDashboardOverview = catchAsync(async (req, res) => {
     const { startDate, endDate } = req.query;
-    const dashboard = await analyticsService.getDashboardOverview(startDate, endDate);
+    const dashboard = await analyticsService.getDashboardOverview(
+      startDate,
+      endDate
+    );
 
     return ResponseHandler.success(
       res,
