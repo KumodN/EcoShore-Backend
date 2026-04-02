@@ -6,10 +6,10 @@ module.exports = {
     'src/service/**/*.js',
     'src/routes/**/*.js',
     '!src/tests/**',
-    '!**/node_modules/**'
+    '!**/node_modules/**',
   ],
   coverageDirectory: 'coverage',
   clearMocks: true,
   testTimeout: 30000,
-  setupFilesAfterEnv: ['<rootDir>/src/tests/setup/jest.setup.js']
+  setupFilesAfterEnv: ['<rootDir>/src/tests/setup/jest.setup.js'],
 };
