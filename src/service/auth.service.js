@@ -125,6 +125,11 @@ const registerAgent = async ({ email, password, name, nic, assignedBeach }) => {
     throw new Error('BEACH_NOT_FOUND');
   }
 
+  // Check if max agents already assigned
+  if (beach.assignedAgents && beach.assignedAgents.length >= 2) {
+    throw new Error('BEACH_MAX_AGENTS');
+  }
+
   const hashed = await bcrypt.hash(password, 10);
 
   const agent = new User({
@@ -137,6 +142,13 @@ const registerAgent = async ({ email, password, name, nic, assignedBeach }) => {
   });
 
   await agent.save();
+
+  // Add agent to beach's assignedAgents
+  if (!beach.assignedAgents) {
+    beach.assignedAgents = [];
+  }
+  beach.assignedAgents.push(agent._id);
+  await beach.save();
 
   return {
     agent: {

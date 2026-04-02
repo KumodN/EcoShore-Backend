@@ -41,7 +41,8 @@ class BeachService {
         .sort(sort)
         .skip(skip)
         .limit(parseInt(limit))
-        .populate('createdBy', 'name email'),
+        .populate('createdBy', 'name email')
+        .populate('assignedAgents', 'name email'),
       Beach.countDocuments(filter),
     ]);
 
@@ -60,10 +61,9 @@ class BeachService {
    * Get beach by ID
    */
   async getBeachById(beachId) {
-    const beach = await Beach.findById(beachId).populate(
-      'createdBy',
-      'name email'
-    );
+    const beach = await Beach.findById(beachId)
+      .populate('createdBy', 'name email')
+      .populate('assignedAgents', 'name email');
 
     if (!beach) {
       throw new NotFoundError('Beach');

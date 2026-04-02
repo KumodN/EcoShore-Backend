@@ -44,6 +44,9 @@ class AgentController {
       if (err.message === 'BEACH_NOT_FOUND') {
         return res.status(404).json({ error: 'Beach not found or inactive' });
       }
+      if (err.message === 'BEACH_MAX_AGENTS') {
+        return res.status(400).json({ error: 'Beach already has maximum 2 agents assigned' });
+      }
       return res.status(500).json({ error: 'Server Error' });
     }
   };

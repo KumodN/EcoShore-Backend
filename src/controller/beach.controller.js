@@ -24,6 +24,7 @@ class BeachController {
         severityScore: beach.analytics?.severityScore || 0,
         severityLevel: beach.analytics?.severityLevel || 'LOW',
       },
+      assignedAgents: beach.assignedAgents || [],
       isActive: beach.isActive,
       image: beach.image,
       createdAt: beach.createdAt,
