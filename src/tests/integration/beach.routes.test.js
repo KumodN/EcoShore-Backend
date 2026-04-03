@@ -2,15 +2,15 @@ const request = require('supertest');
 const { connectDB, closeDB, clearDB } = require('../setup/dbSetup');
 const setupTestApp = require('../setup/testApp');
 const mongoose = require('mongoose');
+const { Beach, User } = require('../../models'); // Load models to register User schema
 
 // Mock Auth Middleware
-jest.mock('../../middleware/auth', () => {
-  return () => (req, res, next) => {
-    // Provide a mocked user object to bypass permission checks
-    req.user = { id: '60d21b4667d0d8992e610c85', role: 'admin' };
-    next();
-  };
+jest.mock('../../middleware/requireAuth', () => (req, res, next) => {
+  req.user = { id: '60d21b4667d0d8992e610c85', role: 'admin' };
+  next();
 });
+jest.mock('../../middleware/authorizeRoles', () => () => (req, res, next) => next());
+jest.mock('../../middleware/auth', () => () => (req, res, next) => next());
 
 const beachRouter = require('../../routes/beach.routes');
 const app = setupTestApp(beachRouter, '/api/beaches');
@@ -37,9 +37,13 @@ describe('Beach API Integration', () => {
         location: {
           address: '123 Ocean Ave',
           city: 'Cool City',
-          coordinates: [40.7128, -74.006],
+          coordinates: {
+            type: 'Point',
+            coordinates: [40.7128, -74.006],
+          },
         },
         description: 'A beautiful beach for tests.',
+        image: 'https://example.com/beach.jpg',
       };
 
       const response = await request(app).post('/api/beaches').send(beachData);
@@ -69,8 +73,25 @@ describe('Beach API Integration', () => {
   describe('GET /api/beaches', () => {
     it('should retrieve list of beaches', async () => {
       // First create one
-      await request(app).post('/api/beaches').send({ name: 'Beach 1' });
-      await request(app).post('/api/beaches').send({ name: 'Beach 2' });
+      const userId = new mongoose.Types.ObjectId();
+      await Beach.create({
+        name: 'Beach 1',
+        location: {
+          address: 'Address 1',
+          city: 'City 1',
+          coordinates: { type: 'Point', coordinates: [0, 0] },
+        },
+        createdBy: userId,
+      });
+      await Beach.create({
+        name: 'Beach 2',
+        location: {
+          address: 'Address 2',
+          city: 'City 2',
+          coordinates: { type: 'Point', coordinates: [0, 0] },
+        },
+        createdBy: userId,
+      });
 
       const response = await request(app).get('/api/beaches?limit=10&page=1');
 

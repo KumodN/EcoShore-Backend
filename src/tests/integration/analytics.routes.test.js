@@ -2,6 +2,7 @@ const request = require('supertest');
 const { connectDB, closeDB, clearDB } = require('../setup/dbSetup');
 const setupTestApp = require('../setup/testApp');
 const { Beach, WasteRecord } = require('../../models');
+const mongoose = require('mongoose');
 
 // Mock Auth Middleware
 jest.mock('../../middleware/auth', () => {
@@ -30,21 +31,24 @@ describe('Analytics API Integration', () => {
   describe('GET /api/analytics/dashboard', () => {
     it('should retrieve dashboard data', async () => {
       // Seed Data
+      const userId = new mongoose.Types.ObjectId();
       const beach = await Beach.create({
         name: 'Test Beach',
         location: {
           type: 'Point',
           coordinates: [0, 0],
           city: 'Test City',
-          country: 'Test Country',
+          address: 'Test Address',
         },
+        createdBy: userId,
       });
       await WasteRecord.create({
         beachId: beach._id,
-        collectorId: 'admin123',
+        recordedBy: userId,
         weight: 100,
         plasticType: 'PET',
         collectionDate: new Date(),
+        isVerified: true,
       });
 
       const response = await request(app).get('/api/analytics/dashboard');
@@ -60,7 +64,13 @@ describe('Analytics API Integration', () => {
     it('should retrieve severity ranking list', async () => {
       await Beach.create({
         name: 'Polluted Beach',
-        location: { type: 'Point', coordinates: [0, 0] },
+        location: {
+          type: 'Point',
+          coordinates: [0, 0],
+          city: 'Test City',
+          address: 'Test Address',
+        },
+        createdBy: new mongoose.Types.ObjectId(),
         analytics: {
           severityScore: 95,
           severityLevel: 'CRITICAL',
