@@ -22,10 +22,12 @@ describe('Analytics Service Performance', () => {
     const beachesToInsert = Array.from({ length: 5 }).map((_, i) => ({
       name: `Beach ${i}`,
       location: {
-        type: 'Point',
-        coordinates: [0, 0],
-        city: 'Test City',
         address: 'Test address',
+        city: 'Test City',
+        coordinates: {
+          type: 'Point',
+          coordinates: [0, 0],
+        },
       },
       createdBy: new mongoose.Types.ObjectId(),
       isActive: true,
@@ -39,14 +41,16 @@ describe('Analytics Service Performance', () => {
 
     // Generate 5000 waste records (100 per beach)
     const recordsToInsert = [];
+    const userId = new mongoose.Types.ObjectId();
     insertedBeaches.forEach((b) => {
       for (let i = 0; i < 100; i++) {
         recordsToInsert.push({
           beachId: b._id,
-          collectorId: new mongoose.Types.ObjectId(),
+          recordedBy: userId,
           weight: Math.random() * 50,
           plasticType: 'PET',
           isDeleted: false,
+          isVerified: true,
           collectionDate: new Date(),
         });
       }
@@ -74,10 +78,12 @@ describe('Analytics Service Performance', () => {
     await Beach.create({
       name: 'Test Beach',
       location: {
-        type: 'Point',
-        coordinates: [0, 0],
-        city: 'perf city',
         address: '123 perf st',
+        city: 'perf city',
+        coordinates: {
+          type: 'Point',
+          coordinates: [0, 0],
+        },
       },
       createdBy: new mongoose.Types.ObjectId(),
     });

@@ -2,7 +2,7 @@ const { performance } = require('perf_hooks');
 const mongoose = require('mongoose');
 const { connectDB, closeDB, clearDB } = require('../setup/dbSetup');
 const beachService = require('../../service/beach.service');
-const Beach = require('../../models/Beach');
+const { Beach, User } = require('../../models'); // Loading from models index registers all schemas
 
 describe('Beach Service Performance', () => {
   beforeAll(async () => {
@@ -23,10 +23,12 @@ describe('Beach Service Performance', () => {
       beaches.push({
         name: `Performance Beach ${i}`,
         location: {
-          type: 'Point',
-          coordinates: [0, 0],
-          city: 'Perf City',
           address: '123 perf st',
+          city: 'Perf City',
+          coordinates: {
+            type: 'Point',
+            coordinates: [0, 0],
+          },
         },
         createdBy: new mongoose.Types.ObjectId(),
         isActive: true,
@@ -60,10 +62,12 @@ describe('Beach Service Performance', () => {
     const beach = await Beach.create({
       name: 'Single Read Perf Beach',
       location: {
-        type: 'Point',
-        coordinates: [0, 0],
-        city: 'perf',
         address: '123 perf',
+        city: 'perf',
+        coordinates: {
+          type: 'Point',
+          coordinates: [0, 0],
+        },
       },
       createdBy: new mongoose.Types.ObjectId(),
     });

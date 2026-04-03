@@ -9,7 +9,10 @@ jest.mock('../../middleware/requireAuth', () => (req, res, next) => {
   req.user = { id: '60d21b4667d0d8992e610c85', role: 'admin' };
   next();
 });
-jest.mock('../../middleware/authorizeRoles', () => () => (req, res, next) => next());
+jest.mock(
+  '../../middleware/authorizeRoles',
+  () => () => (req, res, next) => next()
+);
 jest.mock('../../middleware/auth', () => () => (req, res, next) => next());
 
 const beachRouter = require('../../routes/beach.routes');
