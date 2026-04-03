@@ -80,7 +80,7 @@ class FirebaseChatProvider extends IChatProvider {
       text: messageData.text || '',
       mediaUrl: messageData.mediaUrl || null,
       createdAt: new Date().toISOString(),
-      seenBy: [messageData.senderId], // Sender has seen it
+      seenBy: [messageData.senderId],
     };
 
     const messageRef = this.db.ref(`chats/${chatGroupId}/messages`).push();

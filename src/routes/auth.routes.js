@@ -34,4 +34,7 @@ router.get(
 // Current user
 router.get('/me', auth(), authController.getMe);
 
+// Get all users
+router.get('/users', auth(), authController.getAllUsers);
+
 module.exports = router;

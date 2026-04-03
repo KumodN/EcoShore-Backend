@@ -42,9 +42,33 @@ const getMe = async (req, res) => {
   res.json({ user, token: req.token });
 };
 
+const getAllUsers = async (req, res) => {
+  try {
+    const User = require('../models/User');
+    const currentUserId = req.user?.id;
+
+    // Get all users except the current user and deleted users
+    const users = await User.find({
+      isDeleted: false,
+      _id: { $ne: currentUserId },
+    })
+      .select('_id name email role assignedBeach')
+      .lean();
+
+    return res.status(200).json({
+      success: true,
+      data: users,
+    });
+  } catch (err) {
+    logger.error('Failed to get users', err);
+    return res.status(500).json({ error: 'Server Error' });
+  }
+};
+
 module.exports = {
   register,
   login,
   googleCallback,
   getMe,
+  getAllUsers,
 };

@@ -8,7 +8,12 @@ const createChatGroupSchema = {
     }),
     description: Joi.string().max(500).optional(),
     type: Joi.string()
-      .valid('GLOBAL_VOLUNTEER', 'ORGANIZER_PRIVATE', 'EVENT_GROUP')
+      .valid(
+        'GLOBAL_VOLUNTEER',
+        'ORGANIZER_PRIVATE',
+        'EVENT_GROUP',
+        'DIRECT_MESSAGE'
+      )
       .required(),
     eventId: Joi.string().optional(),
     members: Joi.array().items(Joi.string().hex().length(24)).optional(),

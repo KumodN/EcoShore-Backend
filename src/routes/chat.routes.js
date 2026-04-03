@@ -16,14 +16,21 @@ const router = express.Router();
 /**
  * @route   POST /chat/groups
  * @desc    Create a chat group
- * @access  Private (ORGANIZER, ADMIN)
+ * @access  Private (All users for DIRECT_MESSAGE, ORGANIZER/ADMIN for others)
  */
 router.post(
   '/groups',
   requireAuth,
-  authorizeRoles(ROLES.ORGANIZER, ROLES.ADMIN),
   validate(createChatGroupSchema),
-  chatController.createChatGroup
+  async (req, res, next) => {
+    // Allow all users to create DIRECT_MESSAGE groups, but restrict other types to ORGANIZER/ADMIN
+    if (req.body.type !== 'DIRECT_MESSAGE') {
+      return authorizeRoles(ROLES.ORGANIZER, ROLES.ADMIN)(req, res, () => {
+        chatController.createChatGroup(req, res, next);
+      });
+    }
+    chatController.createChatGroup(req, res, next);
+  }
 );
 
 /**

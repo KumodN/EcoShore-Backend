@@ -13,7 +13,12 @@ const ChatGroupSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['GLOBAL_VOLUNTEER', 'ORGANIZER_PRIVATE', 'EVENT_GROUP'],
+      enum: [
+        'GLOBAL_VOLUNTEER',
+        'ORGANIZER_PRIVATE',
+        'EVENT_GROUP',
+        'DIRECT_MESSAGE',
+      ],
       required: true,
     },
     members: [
