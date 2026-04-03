@@ -39,4 +39,13 @@ router.get('/me', auth(), authController.getMe);
 // Get all users (admin only)
 router.get('/users/all', auth(), authorizeRoles(ROLES.ADMIN), authController.getAllUsers);
 
+// Activate user - admin only
+router.put('/users/:userId/activate', auth(), authorizeRoles(ROLES.ADMIN), authController.activateUser);
+
+// Deactivate user - admin only
+router.put('/users/:userId/deactivate', auth(), authorizeRoles(ROLES.ADMIN), authController.deactivateUser);
+
+// Delete user (hard delete) - admin only
+router.delete('/users/:userId/delete', auth(), authorizeRoles(ROLES.ADMIN), authController.deleteUser);
+
 module.exports = router;
