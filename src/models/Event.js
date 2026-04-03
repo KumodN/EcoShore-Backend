@@ -34,7 +34,6 @@ const EventSchema = new mongoose.Schema(
     agentId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
     },
     volunteers: [
       {

@@ -94,7 +94,7 @@ router.post(
 router.delete(
   '/:id',
   requireAuth,
-  authorizeRoles(ROLES.ADMIN, ROLES.VOLUNTEER),
+  authorizeRoles(ROLES.ADMIN, ROLES.ORGANIZER),
   eventController.deleteEvent
 );
 
