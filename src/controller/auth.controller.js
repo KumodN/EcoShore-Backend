@@ -42,9 +42,32 @@ const getMe = async (req, res) => {
   res.json({ user, token: req.token });
 };
 
+const getAllUsers = async (req, res) => {
+  try {
+    const User = require('../models/User');
+    const users = await User.find({ isDeleted: false })
+      .select('-password')
+      .populate('assignedBeach', 'name location')
+      .lean();
+    
+    return res.status(200).json({
+      success: true,
+      count: users.length,
+      data: users,
+    });
+  } catch (err) {
+    logger.error('Failed to fetch all users', err);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to fetch users',
+    });
+  }
+};
+
 module.exports = {
   register,
   login,
   googleCallback,
   getMe,
+  getAllUsers,
 };
