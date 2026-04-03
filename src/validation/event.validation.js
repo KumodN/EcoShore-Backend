@@ -69,6 +69,16 @@ const eventValidation = {
       eventId: Joi.string().optional(),
     },
   },
+
+  // Assign agent to event validation
+  assignAgent: {
+    body: {
+      agentId: Joi.string().hex().length(24).required().messages({
+        'string.empty': 'Agent ID is required',
+        'string.hex': 'Invalid Agent ID format',
+      }),
+    },
+  },
 };
 
 module.exports = eventValidation;

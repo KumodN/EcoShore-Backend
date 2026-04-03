@@ -50,6 +50,19 @@ router.patch(
 );
 
 /**
+ * @route   PATCH /events/:id/assign-agent
+ * @desc    Assign agent to event (Admin only)
+ * @access  Private (Admin)
+ */
+router.patch(
+  '/:id/assign-agent',
+  requireAuth,
+  authorizeRoles(ROLES.ADMIN),
+  validate(eventValidation.assignAgent),
+  eventController.assignAgent
+);
+
+/**
  * @route   POST /events/:id/join
  * @desc    Join event as volunteer
  * @access  Private
@@ -83,6 +96,18 @@ router.delete(
   requireAuth,
   authorizeRoles(ROLES.ADMIN, ROLES.ORGANIZER),
   eventController.deleteEvent
+);
+
+/**
+ * @route   GET /events/agent/:agentId
+ * @desc    Get all events assigned to a specific agent
+ * @access  Private (Admin and Agent)
+ */
+router.get(
+  '/agent/:agentId',
+  requireAuth,
+  authorizeRoles(ROLES.AGENT, ROLES.ADMIN),
+  eventController.getEventsByAgentId
 );
 
 module.exports = router;

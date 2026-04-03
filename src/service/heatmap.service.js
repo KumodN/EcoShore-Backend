@@ -103,7 +103,9 @@ class HeatmapService {
         { timeout: 15000 }
       );
 
-      return response.data.predictions;
+      // Flask wraps its response: { success, data: { predictions, beachId, beachName } }
+      // Axios response.data = the full JSON body, so predictions are at response.data.data.predictions
+      return response.data.data.predictions;
     } catch (error) {
       // ML service is down — log warning and fall back gracefully
       console.warn(

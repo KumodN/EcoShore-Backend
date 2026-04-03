@@ -98,6 +98,27 @@ class EventController {
   }
 
   /**
+   * Assign agent to event
+   * PATCH /events/:id/assign-agent
+   */
+  async assignAgent(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { agentId } = req.body;
+
+      const event = await eventService.assignAgent(id, agentId);
+
+      res.status(200).json({
+        success: true,
+        message: 'Agent assigned to event successfully',
+        data: event,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Join event
    * POST /events/:id/join
    */
@@ -152,6 +173,30 @@ class EventController {
       res.status(200).json({
         success: true,
         ...result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Get events by Agent ID
+   * GET /events/agent/:agentId
+   */
+  async getEventsByAgentId(req, res, next) {
+    try {
+      const { agentId } = req.params;
+      const { page = 1, limit = 10 } = req.query;
+
+      const result = await eventService.getEventsByAgentId(
+        agentId,
+        parseInt(page),
+        parseInt(limit)
+      );
+
+      res.status(200).json({
+        success: true,
+        data: result,
       });
     } catch (error) {
       next(error);
