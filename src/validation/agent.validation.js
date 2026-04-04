@@ -6,7 +6,7 @@ const agentValidation = {
   registerAgent: {
     body: Joi.object({
       email: Joi.string().email().required(),
-      password: Joi.string().min(8).required(),
+      password: Joi.string().required(),
       name: Joi.string().trim().min(2).max(100).required(),
       nic: Joi.string().trim().min(5).max(20).required(),
       assignedBeach: Joi.string().hex().length(24).required(),
