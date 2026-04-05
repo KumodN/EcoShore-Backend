@@ -43,7 +43,7 @@ const googleCallback = (req, res) => {
   const token = generateToken(user);
 
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-  res.redirect(`${frontendUrl}?token=${token}`);
+  res.redirect(`${frontendUrl}/login?token=${token}`);
 };
 
 const getMe = async (req, res) => {
