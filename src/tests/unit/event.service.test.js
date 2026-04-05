@@ -18,7 +18,7 @@ describe('Event Service Unit Tests', () => {
     it('should create an event and chat group successfully', async () => {
       const organizerId = '507f1f77bcf86cd799439011';
       const eventData = { title: 'Cleanup' };
-      
+
       const mockOrganizer = { _id: organizerId, role: ROLES.ORGANIZER };
       User.findById.mockResolvedValue(mockOrganizer);
 
@@ -26,23 +26,27 @@ describe('Event Service Unit Tests', () => {
         startTransaction: jest.fn(),
         commitTransaction: jest.fn(),
         abortTransaction: jest.fn(),
-        endSession: jest.fn()
+        endSession: jest.fn(),
       };
       Event.startSession.mockResolvedValue(mockSession);
 
-      const mockEvent = [{
-        _id: 'event123',
-        title: 'Cleanup',
-        organizerId,
-        save: jest.fn().mockResolvedValue(true)
-      }];
+      const mockEvent = [
+        {
+          _id: 'event123',
+          title: 'Cleanup',
+          organizerId,
+          save: jest.fn().mockResolvedValue(true),
+        },
+      ];
       Event.create.mockResolvedValue(mockEvent);
 
       chatService.createChatGroup.mockResolvedValue({ _id: 'chat123' });
 
       Event.findById.mockReturnValue({
         populate: jest.fn().mockReturnThis(),
-        lean: jest.fn().mockResolvedValue({ ...mockEvent[0], chatGroupId: 'chat123' })
+        lean: jest
+          .fn()
+          .mockResolvedValue({ ...mockEvent[0], chatGroupId: 'chat123' }),
       });
 
       const result = await eventService.createEvent(organizerId, eventData);
@@ -55,9 +59,14 @@ describe('Event Service Unit Tests', () => {
 
     it('should throw AppError if user is not organizer or admin', async () => {
       const organizerId = '507f1f77bcf86cd799439011';
-      User.findById.mockResolvedValue({ _id: organizerId, role: ROLES.VOLUNTEER });
+      User.findById.mockResolvedValue({
+        _id: organizerId,
+        role: ROLES.VOLUNTEER,
+      });
 
-      await expect(eventService.createEvent(organizerId, {})).rejects.toThrow(AppError);
+      await expect(eventService.createEvent(organizerId, {})).rejects.toThrow(
+        AppError
+      );
     });
   });
 
@@ -68,15 +77,22 @@ describe('Event Service Unit Tests', () => {
         sort: jest.fn().mockReturnThis(),
         skip: jest.fn().mockReturnThis(),
         limit: jest.fn().mockReturnThis(),
-        lean: jest.fn().mockResolvedValue([{ title: 'Event' }])
+        lean: jest.fn().mockResolvedValue([{ title: 'Event' }]),
       };
 
       Event.find.mockReturnValue(mockQuery);
       Event.countDocuments.mockResolvedValue(1);
 
-      const result = await eventService.getEvents({ status: 'UPCOMING' }, 1, 10);
+      const result = await eventService.getEvents(
+        { status: 'UPCOMING' },
+        1,
+        10
+      );
 
-      expect(Event.find).toHaveBeenCalledWith({ isDeleted: false, status: 'UPCOMING' });
+      expect(Event.find).toHaveBeenCalledWith({
+        isDeleted: false,
+        status: 'UPCOMING',
+      });
       expect(result.events).toHaveLength(1);
       expect(result.pagination.total).toBe(1);
     });
@@ -93,7 +109,7 @@ describe('Event Service Unit Tests', () => {
         volunteers: [],
         chatGroupId: 'chat123',
         organizerId: 'org123',
-        save: jest.fn()
+        save: jest.fn(),
       };
       Event.findOne.mockResolvedValue(mockEvent);
 
@@ -101,20 +117,24 @@ describe('Event Service Unit Tests', () => {
         startTransaction: jest.fn(),
         commitTransaction: jest.fn(),
         abortTransaction: jest.fn(),
-        endSession: jest.fn()
+        endSession: jest.fn(),
       };
       Event.startSession.mockResolvedValue(mockSession);
 
       Event.findById.mockReturnValue({
         populate: jest.fn().mockReturnThis(),
-        lean: jest.fn().mockResolvedValue(mockEvent)
+        lean: jest.fn().mockResolvedValue(mockEvent),
       });
 
       await eventService.joinEvent(eventId, userId);
 
       expect(mockEvent.volunteers).toContain(userId);
       expect(mockEvent.save).toHaveBeenCalled();
-      expect(chatService.addMember).toHaveBeenCalledWith('chat123', userId, 'org123');
+      expect(chatService.addMember).toHaveBeenCalledWith(
+        'chat123',
+        userId,
+        'org123'
+      );
     });
   });
 });

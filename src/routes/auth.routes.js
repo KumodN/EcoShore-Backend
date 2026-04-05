@@ -8,6 +8,7 @@ const { ROLES } = require('../constants/roles');
 const {
   registerSchema,
   loginSchema,
+  changePasswordSchema,
 } = require('../validation/auth.validation');
 
 const router = express.Router();
@@ -67,5 +68,14 @@ router.delete(
   authorizeRoles(ROLES.ADMIN),
   authController.deleteUser
 );
+
+// Profile
+router.patch(
+  '/profile/password',
+  auth(),
+  validate(changePasswordSchema),
+  authController.changePassword
+);
+router.delete('/profile', auth(), authController.deleteAccount);
 
 module.exports = router;
