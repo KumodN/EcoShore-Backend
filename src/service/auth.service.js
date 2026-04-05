@@ -4,6 +4,8 @@ const { generateToken } = require('../config/jwt');
 const chatService = require('./chat.service');
 const { ROLES } = require('../constants/roles');
 const logger = require('../config/logger');
+const { sendAgentCredentialsEmail } = require('../config/email');
+const {generateRandomSixDigit} = require('../utils/random')
 
 const registerUser = async ({
   email,
@@ -18,6 +20,7 @@ const registerUser = async ({
     throw new Error('USER_EXISTS');
   }
 
+  
   const hashed = await bcrypt.hash(password, 10);
 
   const user = new User({
@@ -138,7 +141,8 @@ const registerAgent = async ({ email, password, name, nic, assignedBeach }) => {
     throw new Error('BEACH_MAX_AGENTS');
   }
 
-  const hashed = await bcrypt.hash(password, 10);
+   const plainPassword = generateRandomSixDigit();
+  const hashed = await bcrypt.hash(plainPassword, 10);
 
   const agent = new User({
     email,
@@ -158,6 +162,18 @@ const registerAgent = async ({ email, password, name, nic, assignedBeach }) => {
   beach.assignedAgents.push(agent._id);
   await beach.save();
 
+  // Send agent credentials email
+  try {
+    await sendAgentCredentialsEmail(email, {
+      email,
+      password:plainPassword, // Plain text password (only sent once)
+      name,
+    });
+  } catch (emailError) {
+    logger.error('Failed to send agent credentials email, but agent was created:', emailError);
+    // Don't fail agent creation if email fails - agent is already created
+  }
+
   return {
     agent: {
       id: agent._id,
@@ -169,9 +185,6 @@ const registerAgent = async ({ email, password, name, nic, assignedBeach }) => {
     },
   };
 };
-
-
-
 
 module.exports = {
   registerUser,
