@@ -50,11 +50,12 @@ router.get('/groups/:id', requireAuth, chatController.getChatGroup);
 /**
  * @route   POST /chat/groups/:id/members
  * @desc    Add member to chat group
- * @access  Private (Group Admin)
+ * @access  Private (Organizer/Admin)
  */
 router.post(
   '/groups/:id/members',
   requireAuth,
+  authorizeRoles(ROLES.ORGANIZER, ROLES.ADMIN),
   validate(addMemberSchema),
   chatController.addMember
 );

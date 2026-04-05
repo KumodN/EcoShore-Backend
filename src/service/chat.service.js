@@ -15,6 +15,84 @@ class ChatService {
     this.chatProvider = chatProvider;
   }
 
+  getDirectRecipientForUser(group, requesterId) {
+    if (!group || group.type !== 'DIRECT_MESSAGE') {
+      return null;
+    }
+
+    const requesterIdString = requesterId?.toString();
+    if (!requesterIdString) {
+      return null;
+    }
+
+    const members = Array.isArray(group.members) ? group.members : [];
+
+    return (
+      members.find((member) => {
+        const memberId = member?._id?.toString?.() || member?.toString?.();
+        return memberId && memberId !== requesterIdString;
+      }) || null
+    );
+  }
+
+  /**
+   * Compute a requester-specific display name for direct messages.
+   */
+  getGroupDisplayNameForUser(group, requesterId) {
+    if (!group || group.type !== 'DIRECT_MESSAGE') {
+      return group?.name;
+    }
+
+    const requesterIdString = requesterId?.toString();
+    if (!requesterIdString) {
+      return group.name;
+    }
+
+    const members = Array.isArray(group.members) ? group.members : [];
+
+    const otherMember = members.find((member) => {
+      const memberId = member?._id?.toString?.() || member?.toString?.();
+      return memberId && memberId !== requesterIdString;
+    });
+
+    if (otherMember && typeof otherMember === 'object') {
+      return otherMember.name || otherMember.email || group.name;
+    }
+
+    return group.name;
+  }
+
+  decorateGroupForUser(group, requesterId) {
+    if (!group) {
+      return group;
+    }
+
+    const recipient = this.getDirectRecipientForUser(group, requesterId);
+
+    const recipientUserId =
+      recipient && typeof recipient === 'object'
+        ? recipient?._id?.toString?.() || null
+        : null;
+    const recipientIsOnline =
+      recipient && typeof recipient === 'object'
+        ? Boolean(recipient?.isOnline)
+        : false;
+    const recipientLastSeen =
+      recipient && typeof recipient === 'object' ? recipient?.lastSeen || null : null;
+
+    return {
+      ...group,
+      displayName: this.getGroupDisplayNameForUser(group, requesterId),
+      recipientUserId,
+      recipientIsOnline,
+      recipientLastSeen,
+      isOnline:
+        group.type === 'DIRECT_MESSAGE'
+          ? recipientIsOnline
+          : Boolean(group?.isOnline),
+    };
+  }
+
   /**
    * Create a chat group
    */
@@ -27,10 +105,26 @@ class ChatService {
     }
 
     // Include creator and any specified members, making sure there are no duplicates
-    const initialMembers = [...new Set([creatorId, ...members])];
+    const initialMembers = [...new Set([creatorId, ...members].map((id) => id.toString()))];
+
+    if (type === 'DIRECT_MESSAGE') {
+      if (initialMembers.length !== 2) {
+        throw new AppError('Direct messages require exactly one recipient', 400);
+      }
+
+      const existingDirectGroup = await ChatGroup.findOne({
+        type: 'DIRECT_MESSAGE',
+        isActive: true,
+        members: { $all: initialMembers, $size: 2 },
+      });
+
+      if (existingDirectGroup) {
+        return this.getChatGroupById(existingDirectGroup._id.toString(), creatorId);
+      }
+    }
 
     const chatGroup = await ChatGroup.create({
-      name,
+      name: type === 'DIRECT_MESSAGE' ? name?.trim() || 'Direct Message' : name,
       description,
       type,
       eventId,
@@ -44,22 +138,40 @@ class ChatService {
       type: chatGroup.type,
     });
 
-    return chatGroup;
+    return this.getChatGroupById(chatGroup._id.toString(), creatorId);
   }
 
   /**
    * Get chat group by ID
    */
-  async getChatGroupById(groupId) {
+  async getChatGroupById(groupId, requesterId = null) {
     validateObjectId(groupId, 'Chat Group ID');
 
+    if (requesterId) {
+      validateObjectId(requesterId, 'User ID');
+    }
+
     const group = await ChatGroup.findById(groupId)
-      .populate('members', 'name email')
+      .populate('members', 'name email isOnline lastSeen')
       .populate('admins', 'name email')
       .lean();
 
     if (!group) {
       throw new AppError('Chat group not found', 404);
+    }
+
+    if (requesterId) {
+      const requesterIdString = requesterId.toString();
+      const isMember = group.members.some((member) => {
+        const memberId = member?._id?.toString?.() || member?.toString?.();
+        return memberId === requesterIdString;
+      });
+
+      if (!isMember) {
+        throw new AppError('You are not a member of this group', 403);
+      }
+
+      return this.decorateGroupForUser(group, requesterId);
     }
 
     return group;
@@ -75,19 +187,113 @@ class ChatService {
       members: userId,
       isActive: true,
     })
+      .populate('members', 'name email isOnline lastSeen')
       .populate('admins', 'name email')
       .sort({ updatedAt: -1 })
       .lean();
 
-    return groups;
+    const userIdString = userId.toString();
+
+    const groupsWithMetadata = await Promise.all(
+      groups.map(async (group) => {
+        const groupId = group._id.toString();
+
+        let lastMessage = null;
+        let unreadCount = 0;
+
+        try {
+          const messages = await this.chatProvider.getMessages(groupId, {
+            limit: 1,
+          });
+
+          const latest = Array.isArray(messages)
+            ? messages[messages.length - 1]
+            : null;
+
+          if (latest) {
+            lastMessage = {
+              id: latest.id || latest._id,
+              text: latest.text || '',
+              createdAt: latest.createdAt,
+              senderId: latest.senderId,
+            };
+          }
+        } catch {
+          lastMessage = null;
+        }
+
+        try {
+          unreadCount = await this.chatProvider.getUnreadCount(
+            groupId,
+            userIdString
+          );
+        } catch {
+          unreadCount = 0;
+        }
+
+        return this.decorateGroupForUser(
+          {
+            ...group,
+            lastMessage,
+            unreadCount,
+          },
+          userId
+        );
+      })
+    );
+
+    return groupsWithMetadata;
+  }
+
+  /**
+   * Ensure a user can perform a direct 1:1 call in a direct-message group.
+   */
+  async ensureDirectCallAccess(chatGroupId, requesterId, targetUserId) {
+    validateObjectId(chatGroupId, 'Chat Group ID');
+    validateObjectId(requesterId, 'Requester ID');
+    validateObjectId(targetUserId, 'Target User ID');
+
+    const group = await ChatGroup.findById(chatGroupId)
+      .select('type members isActive')
+      .lean();
+
+    if (!group || group.isActive === false) {
+      throw new AppError('Chat group not found', 404);
+    }
+
+    if (group.type !== 'DIRECT_MESSAGE') {
+      throw new AppError('Calling is only supported for direct chats', 400);
+    }
+
+    const memberIds = (group.members || []).map((memberId) =>
+      memberId.toString()
+    );
+
+    if (!memberIds.includes(requesterId.toString())) {
+      throw new AppError('You are not a member of this group', 403);
+    }
+
+    if (!memberIds.includes(targetUserId.toString())) {
+      throw new AppError('Target user is not a member of this direct chat', 403);
+    }
+
+    return group;
   }
 
   /**
    * Add member to chat group
    */
-  async addMember(groupId, userId, requesterId) {
+  async addMember(groupId, userId, requesterId, requesterRole) {
     validateObjectId(groupId, 'Chat Group ID');
     validateObjectId(userId, 'User ID');
+
+    const canManageMembers = [ROLES.ADMIN, ROLES.ORGANIZER].includes(
+      requesterRole
+    );
+
+    if (!canManageMembers) {
+      throw new AppError('Only admins and organizers can add members', 403);
+    }
 
     const group = await ChatGroup.findById(groupId);
 
@@ -95,9 +301,8 @@ class ChatService {
       throw new AppError('Chat group not found', 404);
     }
 
-    // Check if requester is admin
-    if (!group.admins.some((admin) => admin.toString() === requesterId)) {
-      throw new AppError('Only group admins can add members', 403);
+    if (group.type === 'DIRECT_MESSAGE') {
+      throw new AppError('Cannot add members to direct messages', 400);
     }
 
     // Check if user exists

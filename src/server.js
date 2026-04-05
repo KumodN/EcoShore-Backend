@@ -10,6 +10,7 @@ const logger = require('./config/logger');
 const apiRoutes = require('./routes/index');
 const { swaggerUi, specs } = require('./config/swagger');
 const registerMeetingSocket = require('./socket/meeting.socket');
+const registerChatCallSocket = require('./socket/chatCall.socket');
 
 dotenv.config();
 require('./config/google.passport.js');
@@ -39,6 +40,7 @@ const io = new Server(httpServer, {
 });
 
 registerMeetingSocket(io);
+registerChatCallSocket(io);
 
 // ── Global Error Handler ───────────────────────────────────────────────────
 app.use((err, req, res, next) => {

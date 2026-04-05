@@ -34,8 +34,9 @@ class ChatController {
   async getChatGroup(req, res, next) {
     try {
       const { id } = req.params;
+      const requesterId = req.user.id;
 
-      const group = await chatService.getChatGroupById(id);
+      const group = await chatService.getChatGroupById(id, requesterId);
 
       res.status(200).json({
         success: true,
@@ -74,8 +75,14 @@ class ChatController {
       const { id } = req.params;
       const { userId } = req.body;
       const requesterId = req.user.id;
+      const requesterRole = req.user.role;
 
-      const group = await chatService.addMember(id, userId, requesterId);
+      const group = await chatService.addMember(
+        id,
+        userId,
+        requesterId,
+        requesterRole
+      );
 
       res.status(200).json({
         success: true,

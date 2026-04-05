@@ -47,25 +47,18 @@ class FirebaseChatProvider extends IChatProvider {
 
   /**
    * Register a new chat group in Firebase
-   * Instantiates the node by pushing a system status message
+   * Initializes the chat node metadata without posting any visible message
    */
   async createChatGroup(chatGroupId, groupData) {
     this.initialize();
 
-    const systemMessage = {
-      senderId: 'SYSTEM',
-      text: `Chat group "${groupData.name}" has been created.`,
-      mediaUrl: null,
+    await this.db.ref(`chats/${chatGroupId}/meta`).set({
+      name: groupData.name,
+      type: groupData.type,
       createdAt: new Date().toISOString(),
-      seenBy: [],
-      isSystemMessage: true,
-    };
+    });
 
-    const messageRef = this.db.ref(`chats/${chatGroupId}/messages`).push();
-    await messageRef.set(systemMessage);
-    logger.info(
-      `Registered new chat group ${chatGroupId} on Firebase with initial system message.`
-    );
+    logger.info(`Registered new chat group ${chatGroupId} on Firebase.`);
   }
 
   /**
@@ -79,6 +72,12 @@ class FirebaseChatProvider extends IChatProvider {
       senderId: messageData.senderId,
       text: messageData.text || '',
       mediaUrl: messageData.mediaUrl || null,
+      messageType: messageData.messageType || 'TEXT',
+      callEventType: messageData.callEventType || null,
+      durationSeconds:
+        typeof messageData.durationSeconds === 'number'
+          ? messageData.durationSeconds
+          : null,
       createdAt: new Date().toISOString(),
       seenBy: [messageData.senderId],
     };
@@ -109,9 +108,16 @@ class FirebaseChatProvider extends IChatProvider {
     const messages = [];
 
     snapshot.forEach((child) => {
+      const value = child.val();
+
+      // Hide legacy system bootstrap messages from clients.
+      if (value?.isSystemMessage || value?.senderId === 'SYSTEM') {
+        return;
+      }
+
       messages.push({
         id: child.key,
-        ...child.val(),
+        ...value,
       });
     });
 
@@ -161,6 +167,9 @@ class FirebaseChatProvider extends IChatProvider {
     let unreadCount = 0;
     snapshot.forEach((child) => {
       const message = child.val();
+      if (!message || message.isSystemMessage || message.senderId === 'SYSTEM') {
+        return;
+      }
       if (message.seenBy && !message.seenBy.includes(userId)) {
         unreadCount++;
       }

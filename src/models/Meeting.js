@@ -37,12 +37,11 @@ const MeetingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-MeetingSchema.path('participants').validate(
-  function validateMaxParticipants(participants) {
-    return participants.length <= 5;
-  },
-  'Meeting cannot have more than 5 participants'
-);
+MeetingSchema.path('participants').validate(function validateMaxParticipants(
+  participants
+) {
+  return participants.length <= 5;
+}, 'Meeting cannot have more than 5 participants');
 
 MeetingSchema.index({ createdBy: 1 });
 MeetingSchema.index({ participants: 1 });

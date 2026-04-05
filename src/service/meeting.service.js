@@ -129,7 +129,10 @@ class MeetingService {
       this._isCreator(meeting, requestUser.id) || this._isAdmin(requestUser);
 
     if (!canManage) {
-      throw new AppError('Only the creator or an admin can start meetings', 403);
+      throw new AppError(
+        'Only the creator or an admin can start meetings',
+        403
+      );
     }
 
     if (meeting.status === 'ended') {
@@ -179,7 +182,10 @@ class MeetingService {
     );
 
     if (!isParticipant) {
-      throw new AppError('Only meeting participants can join this meeting', 403);
+      throw new AppError(
+        'Only meeting participants can join this meeting',
+        403
+      );
     }
 
     if (meeting.status === 'ended') {

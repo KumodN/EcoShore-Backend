@@ -30,7 +30,10 @@ class MeetingController {
 
   async startMeeting(req, res, next) {
     try {
-      const meeting = await meetingService.startMeeting(req.params.id, req.user);
+      const meeting = await meetingService.startMeeting(
+        req.params.id,
+        req.user
+      );
 
       res.status(200).json({
         success: true,

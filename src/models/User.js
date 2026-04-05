@@ -33,6 +33,14 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isOnline: {
+      type: Boolean,
+      default: false,
+    },
+    lastSeen: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );
@@ -40,5 +48,7 @@ const UserSchema = new mongoose.Schema(
 // Indexes for performance (email index already created by unique: true)
 UserSchema.index({ role: 1 });
 UserSchema.index({ isDeleted: 1 });
+UserSchema.index({ isOnline: 1 });
+UserSchema.index({ lastSeen: -1 });
 
 module.exports = mongoose.model('User', UserSchema);
