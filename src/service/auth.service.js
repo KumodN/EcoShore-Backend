@@ -170,9 +170,42 @@ const registerAgent = async ({ email, password, name, nic, assignedBeach }) => {
   };
 };
 
+const changePassword = async (userId, oldPassword, newPassword) => {
+  const user = await User.findById(userId);
+  if (!user || user.isDeleted) {
+    throw new Error('USER_NOT_FOUND');
+  }
+
+  if (!user.password) {
+    throw new Error('NO_PASSWORD_SET');
+  }
+
+  const isMatch = await bcrypt.compare(oldPassword, user.password);
+  if (!isMatch) {
+    throw new Error('INVALID_OLD_PASSWORD');
+  }
+
+  user.password = await bcrypt.hash(newPassword, 10);
+  await user.save();
+  return { message: 'Password updated successfully' };
+};
+
+const deleteAccount = async (userId) => {
+  const user = await User.findById(userId);
+  if (!user || user.isDeleted) {
+    throw new Error('USER_NOT_FOUND');
+  }
+
+  user.isDeleted = true;
+  await user.save();
+  return { message: 'Account deleted successfully' };
+};
+
 module.exports = {
   registerUser,
   loginUser,
   findOrCreateGoogleUser,
   registerAgent,
+  changePassword,
+  deleteAccount,
 };

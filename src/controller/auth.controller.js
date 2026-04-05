@@ -179,6 +179,29 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const changePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    const result = await authService.changePassword(req.user.id, oldPassword, newPassword);
+    return res.status(200).json({ success: true, ...result });
+  } catch (err) {
+    logger.error('Failed to change password', err);
+    if (err.message === 'NO_PASSWORD_SET') return res.status(400).json({ success: false, error: 'OAuth users cannot change password' });
+    if (err.message === 'INVALID_OLD_PASSWORD') return res.status(400).json({ success: false, error: 'Incorrect old password' });
+    return res.status(500).json({ success: false, error: 'Server Error' });
+  }
+};
+
+const deleteAccount = async (req, res) => {
+  try {
+    const result = await authService.deleteAccount(req.user.id);
+    return res.status(200).json({ success: true, ...result });
+  } catch (err) {
+    logger.error('Failed to delete account', err);
+    return res.status(500).json({ success: false, error: 'Server Error' });
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -188,4 +211,6 @@ module.exports = {
   activateUser,
   deactivateUser,
   deleteUser,
+  changePassword,
+  deleteAccount,
 };
