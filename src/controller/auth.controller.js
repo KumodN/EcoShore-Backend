@@ -25,10 +25,14 @@ const login = async (req, res) => {
       return res.status(400).json({ error: 'Invalid Credentials' });
     }
     if (err.message === 'ACCOUNT_DEACTIVATED') {
-      return res.status(403).json({ error: 'Your account has been deactivated. Contact admin.' });
+      return res
+        .status(403)
+        .json({ error: 'Your account has been deactivated. Contact admin.' });
     }
     if (err.message === 'ACCOUNT_DELETED') {
-      return res.status(403).json({ error: 'Your account has been deleted. Contact admin.' });
+      return res
+        .status(403)
+        .json({ error: 'Your account has been deleted. Contact admin.' });
     }
     return res.status(500).json({ error: 'Server Error' });
   }
@@ -55,7 +59,7 @@ const getAllUsers = async (req, res) => {
       .select('-password')
       .populate('assignedBeach', 'name location')
       .lean();
-    
+
     return res.status(200).json({
       success: true,
       count: users.length,
@@ -74,7 +78,7 @@ const activateUser = async (req, res) => {
   try {
     const User = require('../models/User');
     const { userId } = req.params;
-    
+
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({
@@ -82,10 +86,10 @@ const activateUser = async (req, res) => {
         error: 'User not found',
       });
     }
-    
+
     user.isActive = true;
     await user.save();
-    
+
     return res.status(200).json({
       success: true,
       message: 'User activated successfully',
@@ -109,7 +113,7 @@ const deactivateUser = async (req, res) => {
   try {
     const User = require('../models/User');
     const { userId } = req.params;
-    
+
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({
@@ -117,10 +121,10 @@ const deactivateUser = async (req, res) => {
         error: 'User not found',
       });
     }
-    
+
     user.isActive = false;
     await user.save();
-    
+
     return res.status(200).json({
       success: true,
       message: 'User deactivated successfully',
@@ -144,7 +148,7 @@ const deleteUser = async (req, res) => {
   try {
     const User = require('../models/User');
     const { userId } = req.params;
-    
+
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({
@@ -152,10 +156,10 @@ const deleteUser = async (req, res) => {
         error: 'User not found',
       });
     }
-    
+
     user.isDeleted = true;
     await user.save();
-    
+
     return res.status(200).json({
       success: true,
       message: 'User deleted successfully',
