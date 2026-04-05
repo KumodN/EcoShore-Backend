@@ -1,0 +1,89 @@
+{
+  "numFailedTestSuites": 0,
+  "numFailedTests": 0,
+  "numPassedTestSuites": 1,
+  "numPassedTests": 3,
+  "numPendingTestSuites": 0,
+  "numPendingTests": 0,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 1,
+  "numTotalTests": 3,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1775189225912,
+  "success": true,
+  "testResults": [
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["Beach API Integration", "POST /api/beaches"],
+          "duration": 125,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Beach API Integration POST /api/beaches should create a new beach and return formatted data",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1775189227368,
+          "status": "passed",
+          "title": "should create a new beach and return formatted data"
+        },
+        {
+          "ancestorTitles": ["Beach API Integration", "POST /api/beaches"],
+          "duration": 15,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Beach API Integration POST /api/beaches should validate inputs using JOI",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1775189227495,
+          "status": "passed",
+          "title": "should validate inputs using JOI"
+        },
+        {
+          "ancestorTitles": ["Beach API Integration", "GET /api/beaches"],
+          "duration": 49,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Beach API Integration GET /api/beaches should retrieve list of beaches",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1775189227512,
+          "status": "passed",
+          "title": "should retrieve list of beaches"
+        }
+      ],
+      "endTime": 1775189227758,
+      "message": "",
+      "name": "D:\\My Projects\\MERN\\EcoShore-Backend\\src\\tests\\integration\\beach.routes.test.js",
+      "startTime": 1775189225979,
+      "status": "passed",
+      "summary": ""
+    }
+  ],
+  "wasInterrupted": false
+}

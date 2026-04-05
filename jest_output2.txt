@@ -1,0 +1,213 @@
+FAIL src/tests/integration/beach.routes.test.js
+  ● Test suite failed to run
+
+    ReferenceError: D:\My Projects\MERN\EcoShore-Backend\src\tests\integration\beach.routes.test.js: The module factory of `jest.mock()` is not allowed to reference any out-of-scope variables.
+    Invalid variable access: mongoose
+    Allowed objects: AbortController, AbortSignal, AggregateError, Array, ArrayBuffer, Atomics, BigInt, BigInt64Array, BigUint64Array, Blob, Boolean, BroadcastChannel, Buffer, ByteLengthQueuingStrategy, CompressionStream, CountQueuingStrategy, Crypto, CryptoKey, CustomEvent, DOMException, DataView, Date, DecompressionStream, Error, EvalError, Event, EventTarget, File, FinalizationRegistry, Float32Array, Float64Array, FormData, Function, Generator, GeneratorFunction, Headers, Infinity, Int16Array, Int32Array, Int8Array, InternalError, Intl, JSON, Map, Math, MessageChannel, MessageEvent, MessagePort, NaN, Number, Object, Performance, PerformanceEntry, PerformanceMark, PerformanceMeasure, PerformanceObserver, PerformanceObserverEntryList, PerformanceResourceTiming, Promise, Proxy, RangeError, ReadableByteStreamController, ReadableStream, ReadableStreamBYOBReader, ReadableStreamBYOBRequest, ReadableStreamDefaultController, ReadableStreamDefaultReader, ReferenceError, Reflect, RegExp, Request, Response, Set, SharedArrayBuffer, String, SubtleCrypto, Symbol, SyntaxError, TextDecoder, TextDecoderStream, TextEncoder, TextEncoderStream, TransformStream, TransformStreamDefaultController, TypeError, URIError, URL, URLSearchParams, Uint16Array, Uint32Array, Uint8Array, Uint8ClampedArray, WeakMap, WeakRef, WeakSet, WebAssembly, WritableStream, WritableStreamDefaultController, WritableStreamDefaultWriter, __dirname, __filename, arguments, atob, btoa, clearImmediate, clearInterval, clearTimeout, console, crypto, decodeURI, decodeURIComponent, encodeURI, encodeURIComponent, escape, eval, expect, exports, fetch, global, globalThis, isFinite, isNaN, jest, module, parseFloat, parseInt, performance, process, queueMicrotask, require, setImmediate, setInterval, setTimeout, structuredClone, undefined, unescape.
+    Note: This is a precaution to guard against uninitialized mock variables. If it is ensured that the mock is required lazily, variable names prefixed with `mock` (case insensitive) are permitted.
+
+    [0m [90m  8 |[39m   [36mreturn[39m () [33m=>[39m (req[33m,[39m res[33m,[39m next) [33m=>[39m {
+     [90m  9 |[39m     [90m// Provide a mocked user object to bypass permission checks[39m
+    [31m[1m>[22m[39m[90m 10 |[39m     req[33m.[39muser [33m=[39m { id[33m:[39m [36mnew[39m mongoose[33m.[39m[33mTypes[39m[33m.[39m[33mObjectId[39m()[33m.[39mtoString()[33m,[39m role[33m:[39m [32m'admin'[39m }[33m;[39m
+     [90m    |[39m                          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+     [90m 11 |[39m     next()[33m;[39m
+     [90m 12 |[39m   }[33m;[39m
+     [90m 13 |[39m })[33m;[39m[0m
+
+      at File.buildCodeFrameError (node_modules/@babel/core/src/transformation/file/file.ts:251:12)
+      at NodePath.buildError [as buildCodeFrameError] (node_modules/@babel/traverse/src/path/index.ts:161:21)
+      at call (node_modules/@babel/traverse/src/visitors.ts:299:14)
+      at NodePath.call [as _call] (node_modules/@babel/traverse/src/path/context.ts:36:20)
+      at NodePath.call (node_modules/@babel/traverse/src/path/context.ts:21:18)
+      at NodePath.call [as visit] (node_modules/@babel/traverse/src/path/context.ts:97:31)
+      at TraversalContext.visit [as visitQueue] (node_modules/@babel/traverse/src/context.ts:161:16)
+      at TraversalContext.visitQueue [as visitMultiple] (node_modules/@babel/traverse/src/context.ts:109:17)
+      at TraversalContext.visitMultiple [as visit] (node_modules/@babel/traverse/src/context.ts:192:19)
+      at visit (node_modules/@babel/traverse/src/traverse-node.ts:208:17)
+      at NodePath.visit (node_modules/@babel/traverse/src/path/context.ts:104:33)
+      at TraversalContext.visit [as visitQueue] (node_modules/@babel/traverse/src/context.ts:161:16)
+      at TraversalContext.visitQueue [as visitSingle] (node_modules/@babel/traverse/src/context.ts:119:19)
+      at TraversalContext.visitSingle [as visit] (node_modules/@babel/traverse/src/context.ts:194:19)
+      at visit (node_modules/@babel/traverse/src/traverse-node.ts:208:17)
+      at traverse (node_modules/@babel/traverse/src/index.ts:84:15)
+      at transformFile (node_modules/@babel/core/src/transformation/index.ts:120:15)
+          at transformFile.next (<anonymous>)
+      at transformFile (node_modules/@babel/core/src/transformation/index.ts:50:12)
+          at run.next (<anonymous>)
+      at transform (node_modules/@babel/core/src/transform.ts:29:20)
+          at transform.next (<anonymous>)
+      at evaluateSync (node_modules/gensync/index.js:251:28)
+      at sync (node_modules/gensync/index.js:89:14)
+      at fn (node_modules/@babel/core/src/errors/rewrite-stack-trace.ts:99:14)
+      at transformSync (node_modules/@babel/core/src/transform.ts:66:52)
+      at ScriptTransformer.transformSource (node_modules/@jest/transform/build/index.js:422:31)
+      at ScriptTransformer._transformAndBuildScript (node_modules/@jest/transform/build/index.js:519:40)
+      at ScriptTransformer.transform (node_modules/@jest/transform/build/index.js:558:19)
+
+PASS src/tests/unit/analytics.service.test.js
+  Analytics Service
+    getDashboardOverview
+      √ should aggregate data for dashboard overview (10 ms)
+    getSeverityRanking
+      √ should merge offset data with severity ranking (1 ms)
+    predictPollutionTrend
+      √ should calculate moving average for forecasting (31 ms)
+      √ should fail if insufficient data points (2 ms)
+
+PASS src/tests/unit/beach.controller.test.js
+  Beach Controller Unit Tests
+    createBeach
+      √ should format output and return 201 created status (10 ms)
+    getBeaches
+      √ should apply pagination and formatting (2 ms)
+    getSeverityRanking
+      √ should retrieve list of beaches by severity (6 ms)
+
+FAIL src/tests/unit/analytics.controller.test.js
+  Analytics Controller
+    getDashboardOverview
+      √ should return 200 and dashboard data (10 ms)
+    getSeverityRanking
+      √ should return severity ranking (2 ms)
+    predictTrends
+      √ should generate trend forecast (2 ms)
+    exportAnalyticsJSON
+      × should format and export all analytics data (4 ms)
+
+  ● Analytics Controller › exportAnalyticsJSON › should format and export all analytics data
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: 200
+
+    Number of calls: 0
+
+    [0m [90m  99 |[39m       expect(analyticsService[33m.[39mgetDashboardOverview)[33m.[39mtoHaveBeenCalled()[33m;[39m
+     [90m 100 |[39m       expect(analyticsService[33m.[39mgetSeverityRanking)[33m.[39mtoHaveBeenCalledWith([35m50[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 101 |[39m       expect(res[33m.[39mstatus)[33m.[39mtoHaveBeenCalledWith([35m200[39m)[33m;[39m
+     [90m     |[39m                          [31m[1m^[22m[39m
+     [90m 102 |[39m       expect(res[33m.[39mjson)[33m.[39mtoHaveBeenCalledWith(
+     [90m 103 |[39m         expect[33m.[39mobjectContaining({
+     [90m 104 |[39m           data[33m:[39m expect[33m.[39mobjectContaining({[0m
+
+      at Object.toHaveBeenCalledWith (src/tests/unit/analytics.controller.test.js:101:26)
+
+PASS src/tests/unit/beach.service.test.js
+  Beach Service Unit Tests
+    createBeach
+      √ should create and save a new beach (9 ms)
+    getAllBeaches
+      √ should retrieve beaches sorted and paginated (3 ms)
+    getBeachById
+      √ should successfully find a beach by ID (1 ms)
+      √ should throw NotFoundError if beach does not exist (16 ms)
+    updateBeach
+      √ should update specific fields on the beach document (2 ms)
+
+FAIL src/tests/integration/analytics.routes.test.js
+  ● Test suite failed to run
+
+    Cannot find module '../../middleware/error' from 'src/tests/setup/testApp.js'
+
+    Require stack:
+      src/tests/setup/testApp.js
+      src/tests/integration/analytics.routes.test.js
+
+    [0m [90m 1 |[39m [36mconst[39m express [33m=[39m require([32m'express'[39m)[33m;[39m
+    [31m[1m>[22m[39m[90m 2 |[39m [36mconst[39m { errorHandler } [33m=[39m require([32m'../../middleware/error'[39m)[33m;[39m [90m// Adjust if this doesn't exist[39m
+     [90m   |[39m                          [31m[1m^[22m[39m
+     [90m 3 |[39m [90m// Trying to pull the global error handler, but falling back to simple mock if not found[39m
+     [90m 4 |[39m
+     [90m 5 |[39m [36mconst[39m setupTestApp [33m=[39m (router[33m,[39m routePath [33m=[39m [32m'/api'[39m) [33m=>[39m {[0m
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/index.js:863:11)
+      at Object.require (src/tests/setup/testApp.js:2:26)
+      at Object.require (src/tests/integration/analytics.routes.test.js:3:22)
+
+FAIL src/tests/performance/analytics.perf.test.js
+  Analytics Service Performance
+    × should calculate severity scores for all beaches within acceptable latency (< 500ms) (79 ms)
+    × should retrieve dashboard overview structure rapidly (< 300ms) (37 ms)
+
+  ● Analytics Service Performance › should calculate severity scores for all beaches within acceptable latency (< 500ms)
+
+    ValidationError: Beach validation failed: createdBy: Path `createdBy` is required., location.address: Address is required
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 0)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+
+  ● Analytics Service Performance › should retrieve dashboard overview structure rapidly (< 300ms)
+
+    ValidationError: Beach validation failed: createdBy: Path `createdBy` is required., location.city: City is required, location.address: Address is required
+
+    [0m [90m 60 |[39m   it([32m'should retrieve dashboard overview structure rapidly (< 300ms)'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+     [90m 61 |[39m     [90m// Seed with multiple records[39m
+    [31m[1m>[22m[39m[90m 62 |[39m     [36mawait[39m [33mBeach[39m[33m.[39mcreate({ name[33m:[39m [32m'Test Beach'[39m[33m,[39m location[33m:[39m { type[33m:[39m [32m'Point'[39m[33m,[39m coordinates[33m:[39m [[35m0[39m[33m,[39m [35m0[39m] } })[33m;[39m
+     [90m    |[39m     [31m[1m^[22m[39m
+     [90m 63 |[39m
+     [90m 64 |[39m     [36mconst[39m startTime [33m=[39m performance[33m.[39mnow()[33m;[39m
+     [90m 65 |[39m     [36mawait[39m analyticsService[33m.[39mgetDashboardOverview()[33m;[39m[0m
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 0)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+      at model.validateBeforeSavePreSave (node_modules/mongoose/lib/plugins/validateBeforeSave.js:39:5)
+      at Kareem.execPre (node_modules/kareem/index.js:70:24)
+      at model.$__save (node_modules/mongoose/lib/model.js:371:5)
+      at model.save (node_modules/mongoose/lib/model.js:614:5)
+      at node_modules/mongoose/lib/model.js:2750:9
+          at async Promise.all (index 0)
+      at Function.create (node_modules/mongoose/lib/model.js:2735:11)
+      at Object.<anonymous> (src/tests/performance/analytics.perf.test.js:62:5)
+
+FAIL src/tests/performance/beach.perf.test.js
+  Beach Service Performance
+    × should format, retrieve, and paginate 3000 beaches under 100ms (574 ms)
+    × should retrieve a beach by ID efficiently (8 ms)
+
+  ● Beach Service Performance › should format, retrieve, and paginate 3000 beaches under 100ms
+
+    ValidationError: Beach validation failed: createdBy: Path `createdBy` is required., location.address: Address is required
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 0)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+
+  ● Beach Service Performance › should retrieve a beach by ID efficiently
+
+    ValidationError: Beach validation failed: createdBy: Path `createdBy` is required., location.city: City is required, location.address: Address is required
+
+    [0m [90m 46 |[39m
+     [90m 47 |[39m   it([32m'should retrieve a beach by ID efficiently'[39m[33m,[39m [36masync[39m () [33m=>[39m {
+    [31m[1m>[22m[39m[90m 48 |[39m     [36mconst[39m beach [33m=[39m [36mawait[39m [33mBeach[39m[33m.[39mcreate({
+     [90m    |[39m                   [31m[1m^[22m[39m
+     [90m 49 |[39m       name[33m:[39m [32m'Single Read Perf Beach'[39m[33m,[39m
+     [90m 50 |[39m       location[33m:[39m { type[33m:[39m [32m'Point'[39m[33m,[39m coordinates[33m:[39m [[35m0[39m[33m,[39m[35m0[39m] }
+     [90m 51 |[39m     })[33m;[39m[0m
+
+      at model.Document.invalidate (node_modules/mongoose/lib/document.js:3405:32)
+      at validatePath (node_modules/mongoose/lib/document.js:3177:13)
+          at async Promise.all (index 0)
+      at model.$__validate (node_modules/mongoose/lib/document.js:3118:3)
+      at model.validate (node_modules/mongoose/lib/document.js:2687:5)
+      at model.validateBeforeSavePreSave (node_modules/mongoose/lib/plugins/validateBeforeSave.js:39:5)
+      at Kareem.execPre (node_modules/kareem/index.js:70:24)
+      at model.$__save (node_modules/mongoose/lib/model.js:371:5)
+      at model.save (node_modules/mongoose/lib/model.js:614:5)
+      at node_modules/mongoose/lib/model.js:2750:9
+          at async Promise.all (index 0)
+      at Function.create (node_modules/mongoose/lib/model.js:2735:11)
+      at Object.<anonymous> (src/tests/performance/beach.perf.test.js:48:19)
+
+Test Suites: 5 failed, 3 passed, 8 total
+Tests:       5 failed, 15 passed, 20 total
+Snapshots:   0 total
+Time:        2.394 s, estimated 3 s
+Ran all test suites.

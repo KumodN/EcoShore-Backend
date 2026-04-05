@@ -1,0 +1,80 @@
+{
+  "numFailedTestSuites": 0,
+  "numFailedTests": 0,
+  "numPassedTestSuites": 1,
+  "numPassedTests": 2,
+  "numPendingTestSuites": 0,
+  "numPendingTests": 0,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 1,
+  "numTotalTests": 2,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1775189283909,
+  "success": true,
+  "testResults": [
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": [
+            "Analytics API Integration",
+            "GET /api/analytics/dashboard"
+          ],
+          "duration": 201,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Analytics API Integration GET /api/analytics/dashboard should retrieve dashboard data",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1775189285502,
+          "status": "passed",
+          "title": "should retrieve dashboard data"
+        },
+        {
+          "ancestorTitles": [
+            "Analytics API Integration",
+            "GET /api/analytics/severity-ranking"
+          ],
+          "duration": 21,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Analytics API Integration GET /api/analytics/severity-ranking should retrieve severity ranking list",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 4,
+          "retryReasons": [],
+          "startAt": 1775189285705,
+          "status": "passed",
+          "title": "should retrieve severity ranking list"
+        }
+      ],
+      "endTime": 1775189285991,
+      "message": "",
+      "name": "D:\\My Projects\\MERN\\EcoShore-Backend\\src\\tests\\integration\\analytics.routes.test.js",
+      "startTime": 1775189283974,
+      "status": "passed",
+      "summary": ""
+    }
+  ],
+  "wasInterrupted": false
+}
