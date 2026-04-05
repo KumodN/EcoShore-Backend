@@ -32,7 +32,7 @@ describe('Event Controller Unit Tests', () => {
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         message: 'Event created successfully',
-        data: mockEvent
+        data: mockEvent,
       });
     });
   });
@@ -55,7 +55,7 @@ describe('Event Controller Unit Tests', () => {
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.json).toHaveBeenCalledWith({
         success: true,
-        data: mockResult
+        data: mockResult,
       });
     });
   });
@@ -75,7 +75,7 @@ describe('Event Controller Unit Tests', () => {
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         message: 'Joined event successfully',
-        data: mockResult
+        data: mockResult,
       });
     });
   });

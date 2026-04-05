@@ -15,7 +15,9 @@ jest.mock(
 );
 jest.mock('../../middleware/auth', () => () => (req, res, next) => next());
 jest.mock('../../service/chat.service', () => ({
-  createChatGroup: jest.fn().mockResolvedValue({ _id: new mongoose.Types.ObjectId() }),
+  createChatGroup: jest
+    .fn()
+    .mockResolvedValue({ _id: new mongoose.Types.ObjectId() }),
   addMember: jest.fn().mockResolvedValue(true),
   removeMember: jest.fn().mockResolvedValue(true),
 }));
@@ -37,14 +39,14 @@ describe('Event API Integration', () => {
 
   beforeEach(async () => {
     await clearDB();
-    
+
     organizerId = new mongoose.Types.ObjectId('60d21b4667d0d8992e610c85');
     await User.create({
       _id: organizerId,
       name: 'Test Organizer',
       email: 'org@test.com',
       password: 'password123',
-      role: 'admin'
+      role: 'admin',
     });
 
     const beach = await Beach.create({
@@ -52,9 +54,9 @@ describe('Event API Integration', () => {
       location: {
         address: '123 Ocean Ave',
         city: 'Cool City',
-        coordinates: { type: 'Point', coordinates: [40.7128, -74.006] }
+        coordinates: { type: 'Point', coordinates: [40.7128, -74.006] },
       },
-      createdBy: organizerId
+      createdBy: organizerId,
     });
     beachId = beach._id;
   });
@@ -63,7 +65,7 @@ describe('Event API Integration', () => {
     it('should create a new event and return formatted data', async () => {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      
+
       const nextWeek = new Date();
       nextWeek.setDate(nextWeek.getDate() + 7);
 
@@ -81,7 +83,9 @@ describe('Event API Integration', () => {
       expect(response.status).toBe(201);
       expect(response.body.success).toBe(true);
       expect(response.body.data.title).toBe('Integration Test Event');
-      expect(response.body.data.organizerId._id.toString()).toBe(organizerId.toString());
+      expect(response.body.data.organizerId._id.toString()).toBe(
+        organizerId.toString()
+      );
     });
   });
 
@@ -89,7 +93,7 @@ describe('Event API Integration', () => {
     it('should retrieve list of events', async () => {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
-      
+
       const nextWeek = new Date();
       nextWeek.setDate(nextWeek.getDate() + 7);
 
@@ -99,7 +103,7 @@ describe('Event API Integration', () => {
         beachId: beachId,
         organizerId: organizerId,
         startDate: tomorrow,
-        endDate: nextWeek
+        endDate: nextWeek,
       });
 
       const response = await request(app).get('/api/events?limit=10&page=1');

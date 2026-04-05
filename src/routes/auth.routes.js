@@ -70,7 +70,12 @@ router.delete(
 );
 
 // Profile
-router.patch('/profile/password', auth(), validate(changePasswordSchema), authController.changePassword);
+router.patch(
+  '/profile/password',
+  auth(),
+  validate(changePasswordSchema),
+  authController.changePassword
+);
 router.delete('/profile', auth(), authController.deleteAccount);
 
 module.exports = router;
