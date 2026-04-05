@@ -45,6 +45,7 @@ const registerUser = async ({
     token,
     user: {
       id: user._id,
+      name: user.name,
       email: user.email,
       role: user.role,
     },
@@ -76,6 +77,7 @@ const loginUser = async ({ email, password }) => {
     token,
     user: {
       id: user._id,
+      name: user.name,
       email: user.email,
       role: user.role,
     },
