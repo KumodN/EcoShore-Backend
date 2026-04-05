@@ -41,7 +41,7 @@ router.get('/:id', eventController.getEventById);
  * @desc    Update event
  * @access  Private (Organizer or Admin)
  */
-router.patch(
+router.put(
   '/:id',
   requireAuth,
   authorizeRoles(ROLES.ORGANIZER, ROLES.ADMIN),
