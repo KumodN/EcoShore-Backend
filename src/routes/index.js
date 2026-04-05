@@ -8,6 +8,7 @@ const organizerRequestRoutes = require('./organizerRequest.routes');
 const chatRoutes = require('./chat.routes');
 const communityContentRoutes = require('./communityContent.routes');
 const eventRoutes = require('./event.routes');
+const meetingRoutes = require('./meeting.routes');
 const authRoutes = require('./auth.routes');
 const heatmapRoutes = require('./heatmap.routes');
 const fileUploadRoutes = require('./fileUpload.routes');
@@ -29,6 +30,7 @@ router.use('/organizer-requests', organizerRequestRoutes);
 router.use('/chat', chatRoutes);
 router.use('/community', communityContentRoutes);
 router.use('/events', eventRoutes);
+router.use('/meetings', meetingRoutes);
 router.use('/upload-file', fileUploadRoutes);
 
 module.exports = router;

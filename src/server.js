@@ -2,11 +2,14 @@ const express = require('express');
 const dotenv = require('dotenv');
 const passport = require('passport');
 const cors = require('cors');
+const http = require('http');
+const { Server } = require('socket.io');
 const path = require('path');
 const connectDB = require('./config/db');
 const logger = require('./config/logger');
 const apiRoutes = require('./routes/index');
 const { swaggerUi, specs } = require('./config/swagger');
+const registerMeetingSocket = require('./socket/meeting.socket');
 
 dotenv.config();
 require('./config/google.passport.js');
@@ -27,6 +30,16 @@ app.use('/api', apiRoutes);
 // Swagger Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
+const httpServer = http.createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: process.env.FRONTEND_URL || '*',
+    methods: ['GET', 'POST'],
+  },
+});
+
+registerMeetingSocket(io);
+
 // ── Global Error Handler ───────────────────────────────────────────────────
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
@@ -43,6 +56,6 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`);
 });
