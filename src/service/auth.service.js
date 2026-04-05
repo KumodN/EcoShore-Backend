@@ -57,6 +57,14 @@ const loginUser = async ({ email, password }) => {
     throw new Error('INVALID_CREDENTIALS');
   }
 
+  if (user.isDeleted) {
+    throw new Error('ACCOUNT_DELETED');
+  }
+
+  if (!user.isActive) {
+    throw new Error('ACCOUNT_DEACTIVATED');
+  }
+
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
     throw new Error('INVALID_CREDENTIALS');
@@ -161,6 +169,9 @@ const registerAgent = async ({ email, password, name, nic, assignedBeach }) => {
     },
   };
 };
+
+
+
 
 module.exports = {
   registerUser,
