@@ -212,10 +212,7 @@ class EventService {
 
     // Check if agent is assigned to the same beach as the event
     if (agent.assignedBeach.toString() !== event.beachId.toString()) {
-      throw new AppError(
-        'Agent is not assigned to this event beach',
-        400
-      );
+      throw new AppError('Agent is not assigned to this event beach', 400);
     }
 
     // Update event with agent
