@@ -170,9 +170,6 @@ const registerAgent = async ({ email, password, name, nic, assignedBeach }) => {
   };
 };
 
-
-
-
 module.exports = {
   registerUser,
   loginUser,
