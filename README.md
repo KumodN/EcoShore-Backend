@@ -47,40 +47,39 @@
 
 ## 🌍 Problem Statement
 
-| Problem | Impact |
-|---------|--------|
-| Sri Lanka ranks #5 in global plastic pollution | Urgent need for data-driven solutions |
-| 8 million tons of plastic enter oceans annually | Ineffective resource allocation |
-| 90% of marine debris never gets tracked | No measurable impact metrics |
-| Cleanup efforts lack scientific backing | Poor volunteer engagement |
+| Problem                                         | Impact                                |
+| ----------------------------------------------- | ------------------------------------- |
+| Sri Lanka ranks #5 in global plastic pollution  | Urgent need for data-driven solutions |
+| 8 million tons of plastic enter oceans annually | Ineffective resource allocation       |
+| 90% of marine debris never gets tracked         | No measurable impact metrics          |
+| Cleanup efforts lack scientific backing         | Poor volunteer engagement             |
 
 **Our Solution:** A centralized platform that transforms raw cleanup data into actionable environmental intelligence.
 
 ---
 
-
 ### Clean Architecture Layers
 
-| Layer | Folder | Responsibility |
-|-------|--------|----------------|
-| **Routes** | `/routes` | API endpoint definitions |
-| **Controllers** | `/controller` | HTTP request/response handling |
-| **Services** | `/service` | Business logic implementation |
-| **Repositories** | `/repository` | Database operations abstraction |
-| **Models** | `/models` | MongoDB schema definitions |
-| **Middleware** | `/middleware` | Auth, validation, error handling |
-| **Providers** | `/providers` | External service integrations |
-| **Utils** | `/utils` | Helper functions and custom errors |
+| Layer            | Folder        | Responsibility                     |
+| ---------------- | ------------- | ---------------------------------- |
+| **Routes**       | `/routes`     | API endpoint definitions           |
+| **Controllers**  | `/controller` | HTTP request/response handling     |
+| **Services**     | `/service`    | Business logic implementation      |
+| **Repositories** | `/repository` | Database operations abstraction    |
+| **Models**       | `/models`     | MongoDB schema definitions         |
+| **Middleware**   | `/middleware` | Auth, validation, error handling   |
+| **Providers**    | `/providers`  | External service integrations      |
+| **Utils**        | `/utils`      | Helper functions and custom errors |
 
 ### SOLID Principles Implementation
 
-| Principle | Implementation |
-|-----------|----------------|
+| Principle                 | Implementation                                                                           |
+| ------------------------- | ---------------------------------------------------------------------------------------- |
 | **Single Responsibility** | Each class has one reason to change (Service = business logic, Repository = data access) |
-| **Open/Closed** | BaseRepository extends to specific repositories |
-| **Liskov Substitution** | All repositories follow same interface |
-| **Interface Segregation** | Specific interfaces for specific needs |
-| **Dependency Inversion** | Controllers depend on Service interfaces, Services depend on Repository interfaces |
+| **Open/Closed**           | BaseRepository extends to specific repositories                                          |
+| **Liskov Substitution**   | All repositories follow same interface                                                   |
+| **Interface Segregation** | Specific interfaces for specific needs                                                   |
+| **Dependency Inversion**  | Controllers depend on Service interfaces, Services depend on Repository interfaces       |
 
 ---
 
@@ -88,52 +87,52 @@
 
 ### Backend
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Node.js | 20.x | Runtime environment |
-| Express.js | 4.18.x | Web framework |
-| MongoDB | 6.x | Database |
-| Mongoose | 7.x | ODM |
-| JWT | 9.x | Authentication |
-| Passport.js | 0.6.x | Google OAuth |
-| Joi | 17.x | Request validation |
-| Swagger UI | 5.x | API documentation |
-| Winston | 3.x | Logging |
-| Jest | 29.x | Unit testing |
+| Technology  | Version | Purpose             |
+| ----------- | ------- | ------------------- |
+| Node.js     | 20.x    | Runtime environment |
+| Express.js  | 4.18.x  | Web framework       |
+| MongoDB     | 6.x     | Database            |
+| Mongoose    | 7.x     | ODM                 |
+| JWT         | 9.x     | Authentication      |
+| Passport.js | 0.6.x   | Google OAuth        |
+| Joi         | 17.x    | Request validation  |
+| Swagger UI  | 5.x     | API documentation   |
+| Winston     | 3.x     | Logging             |
+| Jest        | 29.x    | Unit testing        |
 
 ### Frontend
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| React | 18.x | UI framework |
-| Vite | 4.x | Build tool |
-| Tailwind CSS | 3.x | Styling |
-| React Router | 6.x | Routing |
-| Axios | 1.x | API calls |
-| Chart.js | 4.x | Data visualization |
-| React Leaflet | 4.x | Maps |
-| Context API | - | State management |
+| Technology    | Version | Purpose            |
+| ------------- | ------- | ------------------ |
+| React         | 18.x    | UI framework       |
+| Vite          | 4.x     | Build tool         |
+| Tailwind CSS  | 3.x     | Styling            |
+| React Router  | 6.x     | Routing            |
+| Axios         | 1.x     | API calls          |
+| Chart.js      | 4.x     | Data visualization |
+| React Leaflet | 4.x     | Maps               |
+| Context API   | -       | State management   |
 
 ### Machine Learning
 
-| Technology | Purpose |
-|------------|---------|
-| Python 3.10 | ML runtime |
-| Flask | API microservice |
-| Prophet | Time series forecasting |
-| Scikit-learn | Random Forest model |
-| Pandas | Data processing |
+| Technology   | Purpose                 |
+| ------------ | ----------------------- |
+| Python 3.10  | ML runtime              |
+| Flask        | API microservice        |
+| Prophet      | Time series forecasting |
+| Scikit-learn | Random Forest model     |
+| Pandas       | Data processing         |
 
 ### DevOps & Tools
 
-| Tool | Purpose |
-|------|---------|
-| Git | Version control |
-| GitHub Actions | CI/CD |
-| Docker | Containerization |
-| Husky | Git hooks |
-| ESLint | Code linting |
-| Prettier | Code formatting |
+| Tool           | Purpose          |
+| -------------- | ---------------- |
+| Git            | Version control  |
+| GitHub Actions | CI/CD            |
+| Docker         | Containerization |
+| Husky          | Git hooks        |
+| ESLint         | Code linting     |
+| Prettier       | Code formatting  |
 
 ---
 
@@ -141,49 +140,49 @@
 
 ### Module 1: User & Role Management
 
-| Feature | Description |
-|---------|-------------|
-| JWT Authentication | Secure token-based authentication |
-| Google OAuth | Social login integration |
-| Role-Based Access | Admin, Organizer, Volunteer, Sponsor roles |
-| Profile Management | User profile editing and avatar upload |
-| Organizer Requests | Volunteer → Organizer approval workflow |
-| Session Management | Persistent login with token refresh |
+| Feature            | Description                                |
+| ------------------ | ------------------------------------------ |
+| JWT Authentication | Secure token-based authentication          |
+| Google OAuth       | Social login integration                   |
+| Role-Based Access  | Admin, Organizer, Volunteer, Sponsor roles |
+| Profile Management | User profile editing and avatar upload     |
+| Organizer Requests | Volunteer → Organizer approval workflow    |
+| Session Management | Persistent login with token refresh        |
 
 ### Module 2: Event Management
 
-| Feature | Description |
-|---------|-------------|
-| CRUD Operations | Create, read, update, delete events |
+| Feature                | Description                              |
+| ---------------------- | ---------------------------------------- |
+| CRUD Operations        | Create, read, update, delete events      |
 | Volunteer Registration | Join/leave events with capacity tracking |
-| Event Calendar | Upcoming events listing with filters |
-| Location Mapping | Beach coordinates with map integration |
-| Automatic Chat Groups | Event-specific chat groups auto-created |
-| Event Reminders | Email/notification reminders |
+| Event Calendar         | Upcoming events listing with filters     |
+| Location Mapping       | Beach coordinates with map integration   |
+| Automatic Chat Groups  | Event-specific chat groups auto-created  |
+| Event Reminders        | Email/notification reminders             |
 
 ### Module 3: Waste Data Collection
 
-| Feature | Description |
-|---------|-------------|
-| Waste Entry | Record plastic type, weight, and conditions |
-| Plastic Categorization | PET, HDPE, PVC, LDPE, PP, PS, OTHER |
-| Weather Tracking | Record temperature, wind, rain conditions |
-| Photo Upload | Attach images of collected waste |
-| Verification System | Admin verification of waste records |
-| Bulk Entry | Quick-add multiple waste entries |
+| Feature                | Description                                 |
+| ---------------------- | ------------------------------------------- |
+| Waste Entry            | Record plastic type, weight, and conditions |
+| Plastic Categorization | PET, HDPE, PVC, LDPE, PP, PS, OTHER         |
+| Weather Tracking       | Record temperature, wind, rain conditions   |
+| Photo Upload           | Attach images of collected waste            |
+| Verification System    | Admin verification of waste records         |
+| Bulk Entry             | Quick-add multiple waste entries            |
 
 ### Module 4: Analytics Dashboard
 
-| Feature | Description |
-|---------|-------------|
-| Real-time Dashboard | Live metrics: total waste, carbon offset, most polluted beach |
+| Feature                    | Description                                                                          |
+| -------------------------- | ------------------------------------------------------------------------------------ |
+| Real-time Dashboard        | Live metrics: total waste, carbon offset, most polluted beach                        |
 | Severity Ranking Algorithm | 4-factor weighted scoring (40% volume, 30% non-recyclable, 20% frequency, 10% trend) |
-| Plastic Type Analytics | Pie/bar charts showing composition breakdown |
-| Monthly Trends | Time-series visualization of waste patterns |
-| Carbon Offset Calculation | Weight × emission factor × plastic multiplier |
-| Relatable Equivalents | CO₂ converted to cars/trees/homes |
-| AI Pollution Prediction | 7-day forecast using Prophet + Random Forest (89% confidence) |
-| Report Export | JSON and CSV export functionality |
+| Plastic Type Analytics     | Pie/bar charts showing composition breakdown                                         |
+| Monthly Trends             | Time-series visualization of waste patterns                                          |
+| Carbon Offset Calculation  | Weight × emission factor × plastic multiplier                                        |
+| Relatable Equivalents      | CO₂ converted to cars/trees/homes                                                    |
+| AI Pollution Prediction    | 7-day forecast using Prophet + Random Forest (89% confidence)                        |
+| Report Export              | JSON and CSV export functionality                                                    |
 
 **Severity Score Formula:**
 
@@ -193,27 +192,26 @@ Score = (40% × Volume Score) + (30% × Non-recyclable Score) + (20% × Frequenc
 
 Carbon Offset (kg CO₂) = Weight (kg) × Emission Factor (2.5) × Plastic Multiplier
 
-
 ### Module 5: Community Engagement
 
-| Feature | Description |
-|---------|-------------|
-| Discussion Forums | Beach/event specific discussions |
-| Comments & Likes | Social interaction on posts |
-| Awareness Posts | Environmental tips and news |
-| Achievement Badges | 10+ badges for volunteer milestones |
-| Leaderboard | Rank volunteers by points and cleanups |
-| Points System | Earn points for participation |
+| Feature            | Description                            |
+| ------------------ | -------------------------------------- |
+| Discussion Forums  | Beach/event specific discussions       |
+| Comments & Likes   | Social interaction on posts            |
+| Awareness Posts    | Environmental tips and news            |
+| Achievement Badges | 10+ badges for volunteer milestones    |
+| Leaderboard        | Rank volunteers by points and cleanups |
+| Points System      | Earn points for participation          |
 
 ### Module 6: Chat System
 
-| Feature | Description |
-|---------|-------------|
-| Real-time Messaging | Firebase Realtime Database integration |
-| Group Chats | Global, organizer, and event-specific groups |
-| Message Status | Seen/unseen indicators |
-| Media Sharing | Image and file attachments |
-| Push Notifications | New message alerts |
+| Feature             | Description                                  |
+| ------------------- | -------------------------------------------- |
+| Real-time Messaging | Firebase Realtime Database integration       |
+| Group Chats         | Global, organizer, and event-specific groups |
+| Message Status      | Seen/unseen indicators                       |
+| Media Sharing       | Image and file attachments                   |
+| Push Notifications  | New message alerts                           |
 
 ---
 

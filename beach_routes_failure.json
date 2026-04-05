@@ -1,0 +1,101 @@
+{
+  "numFailedTestSuites": 1,
+  "numFailedTests": 1,
+  "numPassedTestSuites": 0,
+  "numPassedTests": 2,
+  "numPendingTestSuites": 0,
+  "numPendingTests": 0,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 1,
+  "numTotalTests": 3,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1775189161413,
+  "success": false,
+  "testResults": [
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["Beach API Integration", "POST /api/beaches"],
+          "duration": 88,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "actual": 400,
+                "expected": 201,
+                "message": "\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m201\u001b[39m\nReceived: \u001b[31m400\u001b[39m",
+                "name": "toBe",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m201\u001b[39m\nReceived: \u001b[31m400\u001b[39m\n    at Object.toBe (D:\\My Projects\\MERN\\EcoShore-Backend\\src\\tests\\integration\\beach.routes.test.js:50:31)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)"
+          ],
+          "fullName": "Beach API Integration POST /api/beaches should create a new beach and return formatted data",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 0,
+          "retryReasons": [],
+          "startAt": 1775189162993,
+          "status": "failed",
+          "title": "should create a new beach and return formatted data"
+        },
+        {
+          "ancestorTitles": ["Beach API Integration", "POST /api/beaches"],
+          "duration": 17,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Beach API Integration POST /api/beaches should validate inputs using JOI",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 1,
+          "retryReasons": [],
+          "startAt": 1775189163088,
+          "status": "passed",
+          "title": "should validate inputs using JOI"
+        },
+        {
+          "ancestorTitles": ["Beach API Integration", "GET /api/beaches"],
+          "duration": 58,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Beach API Integration GET /api/beaches should retrieve list of beaches",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1775189163106,
+          "status": "passed",
+          "title": "should retrieve list of beaches"
+        }
+      ],
+      "endTime": 1775189163328,
+      "message": "\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mBeach API Integration › POST /api/beaches › should create a new beach and return formatted data\u001b[39m\u001b[22m\n\n    \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\n    Expected: \u001b[32m201\u001b[39m\n    Received: \u001b[31m400\u001b[39m\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 48 |\u001b[39m       \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m request(app)\u001b[33m.\u001b[39mpost(\u001b[32m'/api/beaches'\u001b[39m)\u001b[33m.\u001b[39msend(beachData)\u001b[33m;\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 49 |\u001b[39m\u001b[22m\n\u001b[2m    \u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 50 |\u001b[39m       expect(response\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoBe(\u001b[35m201\u001b[39m)\u001b[33m;\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m    |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 51 |\u001b[39m       expect(response\u001b[33m.\u001b[39mbody\u001b[33m.\u001b[39msuccess)\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 52 |\u001b[39m       expect(response\u001b[33m.\u001b[39mbody\u001b[33m.\u001b[39mdata\u001b[33m.\u001b[39mbeach)\u001b[33m.\u001b[39mtoBeDefined()\u001b[33m;\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 53 |\u001b[39m       expect(response\u001b[33m.\u001b[39mbody\u001b[33m.\u001b[39mdata\u001b[33m.\u001b[39mbeach\u001b[33m.\u001b[39mname)\u001b[33m.\u001b[39mtoBe(\u001b[32m'Integration Test Beach'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.toBe (\u001b[22m\u001b[2m\u001b[0m\u001b[36msrc/tests/integration/beach.routes.test.js\u001b[39m\u001b[0m\u001b[2m:50:31)\u001b[22m\u001b[2m\u001b[22m\n",
+      "name": "D:\\My Projects\\MERN\\EcoShore-Backend\\src\\tests\\integration\\beach.routes.test.js",
+      "startTime": 1775189161477,
+      "status": "failed",
+      "summary": ""
+    }
+  ],
+  "wasInterrupted": false
+}
