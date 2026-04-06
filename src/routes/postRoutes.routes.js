@@ -101,7 +101,9 @@ const toPostResponse = (post, currentUserId = null) => {
   const comments = Array.isArray(postObj.comments) ? postObj.comments : [];
   const currentUserIdStr = extractObjectId(currentUserId);
   const isLiked = currentUserIdStr
-    ? likes.some((likeUserId) => extractObjectId(likeUserId) === currentUserIdStr)
+    ? likes.some(
+        (likeUserId) => extractObjectId(likeUserId) === currentUserIdStr
+      )
     : false;
 
   return {
@@ -189,7 +191,9 @@ router.get('/', authOptional, async (req, res, next) => {
     const page = parsePositiveInt(req.query.page, 1);
     const limit = Math.min(parsePositiveInt(req.query.limit, 10), 25);
     const skip = (page - 1) * limit;
-    const authorId = String(req.query.authorId || req.query.userId || '').trim();
+    const authorId = String(
+      req.query.authorId || req.query.userId || ''
+    ).trim();
     const visibility = String(req.query.visibility || '')
       .trim()
       .toLowerCase();
@@ -200,7 +204,10 @@ router.get('/', authOptional, async (req, res, next) => {
     }
 
     if (!req.user || visibility === 'public') {
-      query.$or = [{ visibility: 'public' }, { visibility: { $exists: false } }];
+      query.$or = [
+        { visibility: 'public' },
+        { visibility: { $exists: false } },
+      ];
     } else if (visibility === 'community' || visibility === 'private') {
       query.visibility = { $in: ['community', 'private'] };
     }
