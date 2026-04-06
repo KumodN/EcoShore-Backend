@@ -38,6 +38,8 @@ router.get(
 router.get('/me', auth(), authController.getMe);
 
 // Get all users (admin only)
+router.get('/users', auth(), authController.getAllUsers);
+
 router.get(
   '/users/all',
   auth(),

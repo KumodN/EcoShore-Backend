@@ -6,12 +6,16 @@ dotenv.config();
 const express = require('express');
 const passport = require('passport');
 const cors = require('cors');
+const http = require('http');
+const { Server } = require('socket.io');
 const path = require('path');
 const connectDB = require('./config/db');
 const logger = require('./config/logger');
 const apiRoutes = require('./routes/index');
 const { swaggerUi, specs } = require('./config/swagger');
 const { verifyConnection: verifyEmailConnection } = require('./config/email');
+const registerMeetingSocket = require('./socket/meeting.socket');
+const registerChatCallSocket = require('./socket/chatCall.socket');
 
 require('./config/google.passport.js');
 
@@ -48,6 +52,17 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use('/api', apiRoutes);
 // Swagger Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+const httpServer = http.createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: process.env.FRONTEND_URL || '*',
+    methods: ['GET', 'POST'],
+  },
+});
+
+registerMeetingSocket(io);
+registerChatCallSocket(io);
 
 // ── Global Error Handler ───────────────────────────────────────────────────
 app.use((err, req, res, next) => {
