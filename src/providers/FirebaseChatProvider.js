@@ -167,7 +167,11 @@ class FirebaseChatProvider extends IChatProvider {
     let unreadCount = 0;
     snapshot.forEach((child) => {
       const message = child.val();
-      if (!message || message.isSystemMessage || message.senderId === 'SYSTEM') {
+      if (
+        !message ||
+        message.isSystemMessage ||
+        message.senderId === 'SYSTEM'
+      ) {
         return;
       }
       if (message.seenBy && !message.seenBy.includes(userId)) {

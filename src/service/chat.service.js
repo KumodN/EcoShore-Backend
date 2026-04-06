@@ -78,7 +78,9 @@ class ChatService {
         ? Boolean(recipient?.isOnline)
         : false;
     const recipientLastSeen =
-      recipient && typeof recipient === 'object' ? recipient?.lastSeen || null : null;
+      recipient && typeof recipient === 'object'
+        ? recipient?.lastSeen || null
+        : null;
 
     return {
       ...group,
@@ -105,11 +107,16 @@ class ChatService {
     }
 
     // Include creator and any specified members, making sure there are no duplicates
-    const initialMembers = [...new Set([creatorId, ...members].map((id) => id.toString()))];
+    const initialMembers = [
+      ...new Set([creatorId, ...members].map((id) => id.toString())),
+    ];
 
     if (type === 'DIRECT_MESSAGE') {
       if (initialMembers.length !== 2) {
-        throw new AppError('Direct messages require exactly one recipient', 400);
+        throw new AppError(
+          'Direct messages require exactly one recipient',
+          400
+        );
       }
 
       const existingDirectGroup = await ChatGroup.findOne({
@@ -119,7 +126,10 @@ class ChatService {
       });
 
       if (existingDirectGroup) {
-        return this.getChatGroupById(existingDirectGroup._id.toString(), creatorId);
+        return this.getChatGroupById(
+          existingDirectGroup._id.toString(),
+          creatorId
+        );
       }
     }
 
@@ -274,7 +284,10 @@ class ChatService {
     }
 
     if (!memberIds.includes(targetUserId.toString())) {
-      throw new AppError('Target user is not a member of this direct chat', 403);
+      throw new AppError(
+        'Target user is not a member of this direct chat',
+        403
+      );
     }
 
     return group;

@@ -79,7 +79,12 @@ const updatePresence = async (userId, isOnline) => {
   };
 };
 
-const broadcastPresenceUpdate = (namespace, userId, isOnline, lastSeen = null) => {
+const broadcastPresenceUpdate = (
+  namespace,
+  userId,
+  isOnline,
+  lastSeen = null
+) => {
   namespace.emit('presence-updated', {
     userId: String(userId),
     isOnline,
@@ -241,7 +246,11 @@ const registerChatCallSocket = (io) => {
       }
 
       try {
-        await chatService.ensureDirectCallAccess(chatGroupId, userId, targetUserId);
+        await chatService.ensureDirectCallAccess(
+          chatGroupId,
+          userId,
+          targetUserId
+        );
       } catch (error) {
         socket.emit('call-error', {
           message: error.message,
@@ -298,7 +307,7 @@ const registerChatCallSocket = (io) => {
       }
 
       session.status = 'active';
-        session.acceptedAt = new Date().toISOString();
+      session.acceptedAt = new Date().toISOString();
       activeCalls.set(session.callId, session);
 
       const response = {
@@ -370,7 +379,12 @@ const registerChatCallSocket = (io) => {
       const { callId, toUserId, sdp } = payload;
       const session = resolveCallSession(callId);
 
-      if (!session || !isCallParticipant(session, userId) || !toUserId || !sdp) {
+      if (
+        !session ||
+        !isCallParticipant(session, userId) ||
+        !toUserId ||
+        !sdp
+      ) {
         return;
       }
 
@@ -385,7 +399,12 @@ const registerChatCallSocket = (io) => {
       const { callId, toUserId, sdp } = payload;
       const session = resolveCallSession(callId);
 
-      if (!session || !isCallParticipant(session, userId) || !toUserId || !sdp) {
+      if (
+        !session ||
+        !isCallParticipant(session, userId) ||
+        !toUserId ||
+        !sdp
+      ) {
         return;
       }
 
