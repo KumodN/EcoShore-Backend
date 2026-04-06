@@ -1,0 +1,113 @@
+{
+  "numFailedTestSuites": 1,
+  "numFailedTests": 1,
+  "numPassedTestSuites": 0,
+  "numPassedTests": 3,
+  "numPendingTestSuites": 0,
+  "numPendingTests": 0,
+  "numRuntimeErrorTestSuites": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 1,
+  "numTotalTests": 4,
+  "openHandles": [],
+  "snapshot": {
+    "added": 0,
+    "didUpdate": false,
+    "failure": false,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesRemovedList": [],
+    "filesUnmatched": 0,
+    "filesUpdated": 0,
+    "matched": 0,
+    "total": 0,
+    "unchecked": 0,
+    "uncheckedKeysByFile": [],
+    "unmatched": 0,
+    "updated": 0
+  },
+  "startTime": 1775115388889,
+  "success": false,
+  "testResults": [
+    {
+      "assertionResults": [
+        {
+          "ancestorTitles": ["Analytics Controller", "getDashboardOverview"],
+          "duration": 5,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Analytics Controller getDashboardOverview should return 200 and dashboard data",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1775115389754,
+          "status": "passed",
+          "title": "should return 200 and dashboard data"
+        },
+        {
+          "ancestorTitles": ["Analytics Controller", "getSeverityRanking"],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Analytics Controller getSeverityRanking should return severity ranking",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1775115389762,
+          "status": "passed",
+          "title": "should return severity ranking"
+        },
+        {
+          "ancestorTitles": ["Analytics Controller", "predictTrends"],
+          "duration": 1,
+          "failing": false,
+          "failureDetails": [],
+          "failureMessages": [],
+          "fullName": "Analytics Controller predictTrends should generate trend forecast",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1775115389765,
+          "status": "passed",
+          "title": "should generate trend forecast"
+        },
+        {
+          "ancestorTitles": ["Analytics Controller", "exportAnalyticsJSON"],
+          "duration": 3,
+          "failing": false,
+          "failureDetails": [
+            {
+              "matcherResult": {
+                "message": "\u001b[2mexpect(\u001b[22m\u001b[31mjest.fn()\u001b[39m\u001b[2m).\u001b[22mtoHaveBeenCalledWith\u001b[2m(\u001b[22m\u001b[32m...expected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\n\nNumber of calls: \u001b[31m0\u001b[39m",
+                "pass": false
+              }
+            }
+          ],
+          "failureMessages": [
+            "Error: \u001b[2mexpect(\u001b[22m\u001b[31mjest.fn()\u001b[39m\u001b[2m).\u001b[22mtoHaveBeenCalledWith\u001b[2m(\u001b[22m\u001b[32m...expected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\n\nNumber of calls: \u001b[31m0\u001b[39m\n    at Object.toHaveBeenCalledWith (D:\\My Projects\\MERN\\EcoShore-Backend\\src\\tests\\unit\\analytics.controller.test.js:106:26)"
+          ],
+          "fullName": "Analytics Controller exportAnalyticsJSON should format and export all analytics data",
+          "invocations": 1,
+          "location": null,
+          "numPassingAsserts": 3,
+          "retryReasons": [],
+          "startAt": 1775115389767,
+          "status": "failed",
+          "title": "should format and export all analytics data"
+        }
+      ],
+      "endTime": 1775115389787,
+      "message": "\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mAnalytics Controller › exportAnalyticsJSON › should format and export all analytics data\u001b[39m\u001b[22m\n\n    \u001b[2mexpect(\u001b[22m\u001b[31mjest.fn()\u001b[39m\u001b[2m).\u001b[22mtoHaveBeenCalledWith\u001b[2m(\u001b[22m\u001b[32m...expected\u001b[39m\u001b[2m)\u001b[22m\n\n    Expected: \u001b[32m200\u001b[39m\n\n    Number of calls: \u001b[31m0\u001b[39m\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 104 |\u001b[39m       expect(analyticsService\u001b[33m.\u001b[39mgetDashboardOverview)\u001b[33m.\u001b[39mtoHaveBeenCalled()\u001b[33m;\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 105 |\u001b[39m       expect(analyticsService\u001b[33m.\u001b[39mgetSeverityRanking)\u001b[33m.\u001b[39mtoHaveBeenCalledWith(\u001b[35m50\u001b[39m)\u001b[33m;\u001b[39m\u001b[22m\n\u001b[2m    \u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 106 |\u001b[39m       expect(res\u001b[33m.\u001b[39mstatus)\u001b[33m.\u001b[39mtoHaveBeenCalledWith(\u001b[35m200\u001b[39m)\u001b[33m;\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m     |\u001b[39m                          \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 107 |\u001b[39m       expect(res\u001b[33m.\u001b[39mjson)\u001b[33m.\u001b[39mtoHaveBeenCalledWith(\u001b[22m\n\u001b[2m     \u001b[90m 108 |\u001b[39m         expect\u001b[33m.\u001b[39mobjectContaining({\u001b[22m\n\u001b[2m     \u001b[90m 109 |\u001b[39m           data\u001b[33m:\u001b[39m expect\u001b[33m.\u001b[39mobjectContaining({\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.toHaveBeenCalledWith (\u001b[22m\u001b[2m\u001b[0m\u001b[36msrc/tests/unit/analytics.controller.test.js\u001b[39m\u001b[0m\u001b[2m:106:26)\u001b[22m\u001b[2m\u001b[22m\n",
+      "name": "D:\\My Projects\\MERN\\EcoShore-Backend\\src\\tests\\unit\\analytics.controller.test.js",
+      "startTime": 1775115388951,
+      "status": "failed",
+      "summary": ""
+    }
+  ],
+  "wasInterrupted": false
+}

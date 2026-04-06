@@ -1,5 +1,9 @@
-const express = require('express');
 const dotenv = require('dotenv');
+
+// Load environment variables FIRST, before any other modules
+dotenv.config();
+
+const express = require('express');
 const passport = require('passport');
 const cors = require('cors');
 const http = require('http');
@@ -9,13 +13,31 @@ const connectDB = require('./config/db');
 const logger = require('./config/logger');
 const apiRoutes = require('./routes/index');
 const { swaggerUi, specs } = require('./config/swagger');
+const { verifyConnection: verifyEmailConnection } = require('./config/email');
 const registerMeetingSocket = require('./socket/meeting.socket');
 const registerChatCallSocket = require('./socket/chatCall.socket');
 
-dotenv.config();
 require('./config/google.passport.js');
 
 connectDB();
+
+// Verify email configuration on startup
+if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
+  verifyEmailConnection()
+    .then(() => {
+      logger.info('Email service initialized successfully');
+    })
+    .catch((err) => {
+      logger.warn(
+        'Email service failed to initialize. Agent credentials emails will not be sent:',
+        err.message
+      );
+    });
+} else {
+  logger.warn(
+    'Gmail credentials not configured. Agent credential emails will not be sent. Set GMAIL_USER and GMAIL_APP_PASSWORD environment variables.'
+  );
+}
 
 const app = express();
 
@@ -58,6 +80,6 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 4000;
 
-httpServer.listen(PORT, () => {
+app.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`);
 });

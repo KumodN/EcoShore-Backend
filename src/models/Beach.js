@@ -99,6 +99,22 @@ const beachSchema = new mongoose.Schema(
       default: true,
       index: true,
     },
+
+    assignedAgents: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+        },
+      ],
+      default: [],
+      validate: {
+        validator: function (v) {
+          return !v || v.length <= 2;
+        },
+        message: 'Maximum 2 agents can be assigned to a beach',
+      },
+    },
   },
   {
     timestamps: true,

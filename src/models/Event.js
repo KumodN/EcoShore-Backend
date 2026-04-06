@@ -31,6 +31,10 @@ const EventSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
+    agentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
     volunteers: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -71,6 +75,7 @@ const EventSchema = new mongoose.Schema(
 
 // Indexes for performance
 EventSchema.index({ organizerId: 1 });
+EventSchema.index({ agentId: 1 });
 EventSchema.index({ status: 1 });
 EventSchema.index({ startDate: 1 });
 EventSchema.index({ isDeleted: 1 });

@@ -4,6 +4,8 @@ const { generateToken } = require('../config/jwt');
 const chatService = require('./chat.service');
 const { ROLES } = require('../constants/roles');
 const logger = require('../config/logger');
+const { sendAgentCredentialsEmail } = require('../config/email');
+const {generateRandomSixDigit} = require('../utils/random')
 
 const registerUser = async ({
   email,
@@ -18,6 +20,7 @@ const registerUser = async ({
     throw new Error('USER_EXISTS');
   }
 
+  
   const hashed = await bcrypt.hash(password, 10);
 
   const user = new User({
@@ -45,6 +48,7 @@ const registerUser = async ({
     token,
     user: {
       id: user._id,
+      name: user.name,
       email: user.email,
       role: user.role,
     },
@@ -55,6 +59,14 @@ const loginUser = async ({ email, password }) => {
   const user = await User.findOne({ email });
   if (!user) {
     throw new Error('INVALID_CREDENTIALS');
+  }
+
+  if (user.isDeleted) {
+    throw new Error('ACCOUNT_DELETED');
+  }
+
+  if (!user.isActive) {
+    throw new Error('ACCOUNT_DEACTIVATED');
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
@@ -68,6 +80,7 @@ const loginUser = async ({ email, password }) => {
     token,
     user: {
       id: user._id,
+      name: user.name,
       email: user.email,
       role: user.role,
     },
@@ -125,7 +138,13 @@ const registerAgent = async ({ email, password, name, nic, assignedBeach }) => {
     throw new Error('BEACH_NOT_FOUND');
   }
 
-  const hashed = await bcrypt.hash(password, 10);
+  // Check if max agents already assigned
+  if (beach.assignedAgents && beach.assignedAgents.length >= 2) {
+    throw new Error('BEACH_MAX_AGENTS');
+  }
+
+   const plainPassword = generateRandomSixDigit();
+  const hashed = await bcrypt.hash(plainPassword, 10);
 
   const agent = new User({
     email,
@@ -137,6 +156,25 @@ const registerAgent = async ({ email, password, name, nic, assignedBeach }) => {
   });
 
   await agent.save();
+
+  // Add agent to beach's assignedAgents
+  if (!beach.assignedAgents) {
+    beach.assignedAgents = [];
+  }
+  beach.assignedAgents.push(agent._id);
+  await beach.save();
+
+  // Send agent credentials email
+  try {
+    await sendAgentCredentialsEmail(email, {
+      email,
+      password:plainPassword, // Plain text password (only sent once)
+      name,
+    });
+  } catch (emailError) {
+    logger.error('Failed to send agent credentials email, but agent was created:', emailError);
+    // Don't fail agent creation if email fails - agent is already created
+  }
 
   return {
     agent: {
@@ -150,9 +188,42 @@ const registerAgent = async ({ email, password, name, nic, assignedBeach }) => {
   };
 };
 
+const changePassword = async (userId, oldPassword, newPassword) => {
+  const user = await User.findById(userId);
+  if (!user || user.isDeleted) {
+    throw new Error('USER_NOT_FOUND');
+  }
+
+  if (!user.password) {
+    throw new Error('NO_PASSWORD_SET');
+  }
+
+  const isMatch = await bcrypt.compare(oldPassword, user.password);
+  if (!isMatch) {
+    throw new Error('INVALID_OLD_PASSWORD');
+  }
+
+  user.password = await bcrypt.hash(newPassword, 10);
+  await user.save();
+  return { message: 'Password updated successfully' };
+};
+
+const deleteAccount = async (userId) => {
+  const user = await User.findById(userId);
+  if (!user || user.isDeleted) {
+    throw new Error('USER_NOT_FOUND');
+  }
+
+  user.isDeleted = true;
+  await user.save();
+  return { message: 'Account deleted successfully' };
+};
+
 module.exports = {
   registerUser,
   loginUser,
   findOrCreateGoogleUser,
   registerAgent,
+  changePassword,
+  deleteAccount,
 };

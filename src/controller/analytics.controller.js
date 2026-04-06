@@ -7,7 +7,11 @@ class AnalyticsController {
    * Get dashboard overview
    */
   getDashboardOverview = catchAsync(async (req, res) => {
-    const dashboard = await analyticsService.getDashboardOverview();
+    const { startDate, endDate } = req.query;
+    const dashboard = await analyticsService.getDashboardOverview(
+      startDate,
+      endDate
+    );
 
     return ResponseHandler.success(
       res,
@@ -153,6 +157,18 @@ class AnalyticsController {
         ],
       },
       'CSV data prepared successfully'
+    );
+  });
+  /**
+   * Recalculate carbon offsets for all waste records (admin)
+   */
+  recalculateCarbonOffsets = catchAsync(async (req, res) => {
+    const result = await analyticsService.recalculateCarbonOffsets();
+
+    return ResponseHandler.success(
+      res,
+      { result },
+      `Carbon offsets recalculated: ${result.recordsUpdated} records updated, ${result.beachesRebuild} beaches rebuilt`
     );
   });
 }

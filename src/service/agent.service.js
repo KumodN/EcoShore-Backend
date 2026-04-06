@@ -25,6 +25,18 @@ class AgentService {
   async deleteAgent(agentId) {
     const agent = await agentRepository.findAgentById(agentId);
     if (!agent) throw new NotFoundError('Agent');
+
+    // Remove agent from beach's assignedAgents
+    if (agent.assignedBeach) {
+      const beach = await Beach.findById(agent.assignedBeach);
+      if (beach) {
+        beach.assignedAgents = beach.assignedAgents.filter(
+          (id) => id.toString() !== agentId
+        );
+        await beach.save();
+      }
+    }
+
     await agentRepository.delete(agentId);
     return agent;
   }
@@ -37,6 +49,30 @@ class AgentService {
     const beach = await Beach.findById(newBeachId);
     if (!beach || !beach.isActive) throw new NotFoundError('Beach');
 
+    // Check if max agents already assigned
+    if (beach.assignedAgents && beach.assignedAgents.length >= 2) {
+      throw new Error('Beach already has maximum 2 agents assigned');
+    }
+
+    // Remove agent from old beach if exists
+    if (agent.assignedBeach) {
+      const oldBeach = await Beach.findById(agent.assignedBeach);
+      if (oldBeach) {
+        oldBeach.assignedAgents = oldBeach.assignedAgents.filter(
+          (id) => id.toString() !== agentId
+        );
+        await oldBeach.save();
+      }
+    }
+
+    // Add agent to new beach
+    if (!beach.assignedAgents) {
+      beach.assignedAgents = [];
+    }
+    beach.assignedAgents.push(agentId);
+    await beach.save();
+
+    // Update agent's assignedBeach
     return agentRepository.update(agentId, { assignedBeach: newBeachId });
   }
 }

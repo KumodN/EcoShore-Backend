@@ -41,12 +41,25 @@ router.get('/:id', eventController.getEventById);
  * @desc    Update event
  * @access  Private (Organizer or Admin)
  */
-router.patch(
+router.put(
   '/:id',
   requireAuth,
   authorizeRoles(ROLES.ORGANIZER, ROLES.ADMIN),
   validate(eventValidation.updateEvent),
   eventController.updateEvent
+);
+
+/**
+ * @route   PATCH /events/:id/assign-agent
+ * @desc    Assign agent to event (Admin only)
+ * @access  Private (Admin)
+ */
+router.patch(
+  '/:id/assign-agent',
+  requireAuth,
+  authorizeRoles(ROLES.ADMIN),
+  validate(eventValidation.assignAgent),
+  eventController.assignAgent
 );
 
 /**
@@ -81,8 +94,20 @@ router.post(
 router.delete(
   '/:id',
   requireAuth,
-  authorizeRoles(ROLES.ADMIN, ROLES.VOLUNTEER),
+  authorizeRoles(ROLES.ADMIN, ROLES.ORGANIZER),
   eventController.deleteEvent
+);
+
+/**
+ * @route   GET /events/agent/:agentId
+ * @desc    Get all events assigned to a specific agent
+ * @access  Private (Admin and Agent)
+ */
+router.get(
+  '/agent/:agentId',
+  requireAuth,
+  authorizeRoles(ROLES.AGENT, ROLES.ADMIN),
+  eventController.getEventsByAgentId
 );
 
 module.exports = router;

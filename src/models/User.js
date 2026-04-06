@@ -29,6 +29,10 @@ const UserSchema = new mongoose.Schema(
       ref: 'Beach',
       default: null,
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -48,6 +52,7 @@ const UserSchema = new mongoose.Schema(
 // Indexes for performance (email index already created by unique: true)
 UserSchema.index({ role: 1 });
 UserSchema.index({ isDeleted: 1 });
+UserSchema.index({ isActive: 1 });
 UserSchema.index({ isOnline: 1 });
 UserSchema.index({ lastSeen: -1 });
 
