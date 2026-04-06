@@ -76,7 +76,10 @@ const sendAgentCredentialsEmail = async (agentEmail, agentData) => {
     logger.info(`Agent credentials email sent to ${agentEmail}`);
     return true;
   } catch (error) {
-    logger.error(`Failed to send agent credentials email to ${agentEmail}:`, error);
+    logger.error(
+      `Failed to send agent credentials email to ${agentEmail}:`,
+      error
+    );
     throw error;
   }
 };
