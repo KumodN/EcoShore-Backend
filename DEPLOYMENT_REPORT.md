@@ -110,6 +110,12 @@ GOOGLE_CALLBACK_URL=https://yourdomain.com/api/auth/google/callback
 ML_SERVICE_URL=http://localhost:5001
 ML_TRAIN_SECRET=<strong secret>
 WEATHER_API_KEY=...
+FIREBASE_DATABASE_URL=https://<project-id>-default-rtdb.firebaseio.com
+FIREBASE_PROJECT_ID=<firebase-project-id>
+FIREBASE_CLIENT_EMAIL=<service-account-email>
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+# Optional: full JSON blob alternative (instead of individual FIREBASE_* fields)
+# FIREBASE_SERVICE_ACCOUNT_JSON={"type":"service_account",...}
 ```
 
 ---
