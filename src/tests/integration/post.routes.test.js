@@ -86,7 +86,9 @@ describe('Post API Integration', () => {
 
       expect(response.status).toBe(201);
       expect(response.body.success).toBe(true);
-      expect(response.body.data.text).toBe('Community clean-up drive tomorrow!');
+      expect(response.body.data.text).toBe(
+        'Community clean-up drive tomorrow!'
+      );
       expect(response.body.data.visibility).toBe('community');
     });
   });

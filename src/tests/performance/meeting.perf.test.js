@@ -77,10 +77,13 @@ describe('Meeting Service Performance', () => {
     });
 
     const startTime = performance.now();
-    const startedMeeting = await meetingService.startMeeting(meeting._id.toString(), {
-      id: organizerId.toString(),
-      role: 'organizer',
-    });
+    const startedMeeting = await meetingService.startMeeting(
+      meeting._id.toString(),
+      {
+        id: organizerId.toString(),
+        role: 'organizer',
+      }
+    );
     const endTime = performance.now();
 
     const latencyMs = endTime - startTime;

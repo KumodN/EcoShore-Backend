@@ -73,19 +73,21 @@ describe('Meeting API Integration', () => {
 
   describe('POST /api/meetings/create', () => {
     it('should create a scheduled meeting with normalized participants', async () => {
-      const response = await request(app).post('/api/meetings/create').send({
-        title: 'Community Moderators Sync',
-        participants: [volunteerId],
-        isInstant: false,
-        scheduledAt: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
-      });
+      const response = await request(app)
+        .post('/api/meetings/create')
+        .send({
+          title: 'Community Moderators Sync',
+          participants: [volunteerId],
+          isInstant: false,
+          scheduledAt: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+        });
 
       expect(response.status).toBe(201);
       expect(response.body.success).toBe(true);
       expect(response.body.data.title).toBe('Community Moderators Sync');
 
-      const participantIds = response.body.data.participants.map((participant) =>
-        participant._id.toString()
+      const participantIds = response.body.data.participants.map(
+        (participant) => participant._id.toString()
       );
       expect(participantIds).toEqual(
         expect.arrayContaining([organizerId, volunteerId])
@@ -128,7 +130,9 @@ describe('Meeting API Integration', () => {
 
       mockAuthUser = { id: outsiderId, role: 'volunteer' };
 
-      const response = await request(app).post(`/api/meetings/start/${meeting._id}`);
+      const response = await request(app).post(
+        `/api/meetings/start/${meeting._id}`
+      );
 
       expect(response.status).toBe(403);
       expect(response.body.success).toBe(false);
@@ -149,7 +153,9 @@ describe('Meeting API Integration', () => {
 
       mockAuthUser = { id: organizerId, role: 'organizer' };
 
-      const response = await request(app).post(`/api/meetings/end/${meeting._id}`);
+      const response = await request(app).post(
+        `/api/meetings/end/${meeting._id}`
+      );
 
       expect(response.status).toBe(200);
       expect(response.body.success).toBe(true);

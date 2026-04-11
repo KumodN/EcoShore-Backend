@@ -1,5 +1,6 @@
 const IChatProvider = require('../interfaces/IChatProvider');
 const logger = require('../config/logger');
+const FIREBASE_CONFIG = require('../config/firebase-service-account.json');
 
 /**
  * FirebaseChatProvider (SOLID - Single Responsibility)
@@ -27,11 +28,10 @@ class FirebaseChatProvider extends IChatProvider {
 
     try {
       const admin = require('firebase-admin');
-      const serviceAccount = require('../config/firebase-service-account.json');
 
       if (!admin.apps.length) {
         admin.initializeApp({
-          credential: admin.credential.cert(serviceAccount),
+          credential: admin.credential.cert(FIREBASE_CONFIG),
           databaseURL: process.env.FIREBASE_DATABASE_URL,
         });
       }

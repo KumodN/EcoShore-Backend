@@ -35,7 +35,10 @@ describe('Meeting Controller Unit Tests', () => {
 
       await meetingController.createMeeting(req, res, mockNext);
 
-      expect(meetingService.createMeeting).toHaveBeenCalledWith(req.user, req.body);
+      expect(meetingService.createMeeting).toHaveBeenCalledWith(
+        req.user,
+        req.body
+      );
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({
         success: true,
