@@ -260,9 +260,24 @@ const registerChatCallSocket = (io) => {
       }
 
       if (!isUserOnline(targetUserId)) {
+        const offlineCallSession = {
+          callId: randomUUID(),
+          chatGroupId: String(chatGroupId),
+          fromUserId: userId,
+          toUserId: targetUserId,
+          status: 'unavailable',
+          createdAt: new Date().toISOString(),
+        };
+
+        try {
+          await appendCallEventMessage(offlineCallSession, userId, 'declined');
+        } catch {
+          // Call event logging should never block signaling.
+        }
+
         socket.emit('call-unavailable', {
           toUserId: targetUserId,
-          message: 'User is offline',
+          message: 'User is offline right now. A missed call was recorded.',
         });
         return;
       }
