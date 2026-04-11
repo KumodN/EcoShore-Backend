@@ -89,17 +89,21 @@ describe('Chat API Integration', () => {
 
   describe('POST /api/chat/groups', () => {
     it('should create an event group and include creator + member', async () => {
-      const response = await request(app).post('/api/chat/groups').send({
-        name: 'Beach Cleanup Group',
-        type: 'EVENT_GROUP',
-        members: [memberId],
-      });
+      const response = await request(app)
+        .post('/api/chat/groups')
+        .send({
+          name: 'Beach Cleanup Group',
+          type: 'EVENT_GROUP',
+          members: [memberId],
+        });
 
       expect(response.status).toBe(201);
       expect(response.body.success).toBe(true);
       expect(response.body.data.name).toBe('Beach Cleanup Group');
 
-      const savedGroup = await ChatGroup.findById(response.body.data._id).lean();
+      const savedGroup = await ChatGroup.findById(
+        response.body.data._id
+      ).lean();
       expect(savedGroup.members.map((m) => m.toString())).toEqual(
         expect.arrayContaining([ownerId, memberId])
       );
@@ -146,7 +150,10 @@ describe('Chat API Integration', () => {
       expect(response.body.success).toBe(true);
       expect(firebaseProvider.sendMessage).toHaveBeenCalledWith(
         group._id.toString(),
-        expect.objectContaining({ senderId: memberId, text: 'See you all at 7 AM' })
+        expect.objectContaining({
+          senderId: memberId,
+          text: 'See you all at 7 AM',
+        })
       );
     });
 

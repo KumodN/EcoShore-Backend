@@ -131,7 +131,9 @@ describe('Meeting Service Unit Tests', () => {
 
       const result = await meetingService.getMyMeetings(participantId);
 
-      expect(Meeting.find).toHaveBeenCalledWith({ participants: participantId });
+      expect(Meeting.find).toHaveBeenCalledWith({
+        participants: participantId,
+      });
       expect(result).toHaveLength(1);
     });
   });
