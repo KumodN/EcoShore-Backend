@@ -80,6 +80,6 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`);
 });
